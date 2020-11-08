@@ -1,0 +1,147 @@
+package com.axgrid.jdbc.rawsql;
+
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+public final class RawUtils {
+    static Pattern listPattern =  Pattern.compile("^(.*)<(.*)>$");
+    static Pattern setterPattern =  Pattern.compile("^set(\\w+)$");
+
+    final static Set<String> primitiveName = new HashSet<>(Arrays.asList(
+            "long",
+            "short",
+            "int",
+            "byte",
+            "char",
+            "boolean",
+            "double",
+            "float"
+    ));
+
+    public static String flag(boolean b) {
+        return b ? "1" : "0";
+    }
+
+    public static boolean isSimpleType(String typeName) {
+        return primitiveName.contains(typeName);
+    }
+
+    public static boolean isPrimitiveOrWrapper(String typeName) {
+        if (isSimpleType(typeName)) return true;
+        try {
+            return ClassUtils.isPrimitiveOrWrapper(Class.forName(typeName));
+        }catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static boolean isList(String typeName) {
+        return typeName.contains("List<");
+    }
+
+    public static String getTypeDefaultValue(String typeName) {
+        switch (typeName) {
+            default:
+                return "null";
+            case "long":
+            case "int":
+            case "byte":
+            case "float":
+            case "double":
+            case "short":
+                return "0";
+            case "char":
+                return "\' \'";
+            case "boolean":
+                return "false";
+        }
+    }
+
+    public static boolean isNumericType(String typeName) {
+        switch (typeName) {
+            case "long":
+            case "int":
+            case "byte":
+            case "short":
+            case "java.lang.Long":
+            case "java.lang.Integer":
+            case "java.lang.Byte":
+            case "java.lang.Short":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static String simpleToObject(String typeName) {
+        switch (typeName){
+            default:
+                return "java.lang.Object";
+            case "long":
+                return "java.lang.Long";
+            case "int":
+                return "java.lang.Integer";
+            case "byte":
+                return "java.lang.Byte";
+            case "byte[]":
+                return "byte[]";
+            case "char":
+                return "java.lang.Character";
+            case "boolean":
+                return "java.lang.Boolean";
+            case "float":
+                return "java.lang.Float";
+            case "double":
+                return "java.lang.Double";
+            case "short":
+                return "java.lang.Short";
+        }
+    }
+
+    public static String getGenericTypeName(String listType) {
+        var matcher = listPattern.matcher(listType);
+        if (matcher.find()) return matcher.group(2);
+        return "";
+    }
+
+    public static boolean isSetter(String name) {
+        return setterPattern.matcher(name).find();
+    }
+
+    public static String getSetterName(String name) {
+        var matcher = setterPattern.matcher(name);
+        if (!matcher.find()) return null;
+        return StringUtils.uncapitalize(matcher.group(1));
+    }
+
+    public static String getFromResultSet(String field, String typeName) {
+        switch (typeName){
+            default:
+                return String.format(".getObject(\"%s\", %s.class)", field, typeName);
+            case "int":
+                return String.format(".getInt(\"%s\")", field);
+            case "long":
+                return String.format(".getLong(\"%s\")", field);
+            case "byte":
+                return String.format(".getByte(\"%s\")", field);
+            case "boolean":
+                return String.format(".getBoolean(\"%s\")", field);
+            case "byte[]":
+                return String.format(".getBytes(\"%s\")", field);
+            case "short":
+                return String.format(".getShort(\"%s\")", field);
+            case "double":
+                return String.format(".getDouble(\"%s\")", field);
+            case "float":
+                return String.format(".getFloat(\"%s\")", field);
+            case "java.lang.String":
+                return String.format(".getString(\"%s\")", field);
+        }
+    }
+
+}

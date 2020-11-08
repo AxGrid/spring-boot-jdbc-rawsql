@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: RawMapper (Dev)
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:testdb;mode=MySQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+    initialization-mode: always
+    hikari:
+      connection-test-query: SELECT 1
