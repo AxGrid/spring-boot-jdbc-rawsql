@@ -12,6 +12,7 @@ public class MyRawObject {
     MySimpleEnum quest = MySimpleEnum.No;
 
     @RawObject.Include("data")
+    @RawObject.JsonObject
     MyIncludedJsonObject includedJsonObject;
 
     double doubleValue = 5.3;

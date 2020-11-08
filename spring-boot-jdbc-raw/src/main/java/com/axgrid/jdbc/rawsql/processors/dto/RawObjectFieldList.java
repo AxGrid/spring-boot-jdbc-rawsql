@@ -12,7 +12,7 @@ public class RawObjectFieldList extends HashMap<String, RawObjectField> {
         return field;
     }
 
-    public boolean hasJsonObjects() {
+    public boolean isJsonObjects() {
         return this.values().stream().anyMatch(RawObjectField::isJsonObject);
     }
 

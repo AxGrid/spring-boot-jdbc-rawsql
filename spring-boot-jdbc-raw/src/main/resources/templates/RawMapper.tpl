@@ -3,6 +3,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 {{#if fields.jsonObjects}}
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 {{/if}}
@@ -16,13 +17,9 @@ public class {{className}} implements RowMapper<{{objectName}}> {
         ObjectMapper om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         {{/if}}
-
         {{#each fields}}
-        {{#if jsonObject}}
-        {{>JsonObject this}}
-        {{else}}
-        {{>Field this}}
-        {{/if}}
+        {{#if jsonObject}}{{>JsonObject this}}
+        {{else}}{{>Field this}}{{/if}}
         {{/each}}
         return res;
     }

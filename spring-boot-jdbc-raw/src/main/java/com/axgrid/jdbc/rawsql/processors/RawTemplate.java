@@ -30,7 +30,7 @@ public class RawTemplate {
 
     @NotNull
     public String generate(@NotNull RawObjectDescription description) throws IOException {
-        var template = handlebars.compile("RawObjectMapper");
+        var template = handlebars.compile("RawMapper");
         return template.apply(description);
     }
 

@@ -16,6 +16,7 @@ import java.util.Set;
 
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawObject")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedOptions("debug")
 public class RawObjectsProcessor extends AbstractProcessor {
 
     private Filer filer;
@@ -28,10 +29,12 @@ public class RawObjectsProcessor extends AbstractProcessor {
         this.filer = pe.getFiler();
         this.messager = pe.getMessager();
         this.procEnv = pe;
+        System.out.println("--- INIT !!!!!! ---");
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        System.out.println("--- PROCESS !!!!!! ---");
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 try {
