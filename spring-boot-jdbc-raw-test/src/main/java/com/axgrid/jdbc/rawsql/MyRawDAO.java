@@ -8,7 +8,15 @@ public interface MyRawDAO {
     @RawDAO.RawUpdate("update my_table set name=:name, age=:age where id=:id")
     MyRawObject updateObject(@RawDAO.RawParamObject MyRawObject obj);
 
-    @RawDAO.RawInsert("insert into my_table (name, age) VALUES (:name, :age)")
+//    id bigint primary key auto_increment not null,
+//            `name` varchar(150),
+//    age int,
+//            `enum1` varchar(100),
+//    `enum2` int,
+//            `data` longtext,
+//            `dval` double
+
+    @RawDAO.RawInsert("insert into my_table (name, age, enum1, enum2, data, dval) VALUES (:name, :age, :enumString, :enumIntValue, :includedJsonObjectData, :dval)")
     long createObject(@RawDAO.RawParamObject MyRawObject obj);
 
     @RawDAO.RawQuery("select * from my_table where id=:id")

@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class {{objectName}}RawDAO implements {{objectName}} {
 

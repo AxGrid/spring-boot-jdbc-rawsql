@@ -1,5 +1,7 @@
 package com.axgrid.jdbc.rawsql;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
 @Data
@@ -7,17 +9,32 @@ import lombok.Data;
 public class MyRawObject {
     Long id;
     String name;
-
     int age;
 
-    @RawObject.Include("enum")
-    MySimpleEnum quest = MySimpleEnum.No;
+    @RawObject.Include("enum1")
+    MySimpleEnum enumString = MySimpleEnum.No;
+
+    @RawObject.Include("enum2")
+    MySimpleEnum enumInt = MySimpleEnum.No;
+
+    public int getEnumIntValue() {
+        return enumInt.ordinal();
+    }
 
     @RawObject.Include("data")
     @RawObject.JsonObject
     MyIncludedJsonObject includedJsonObject;
 
-    double doubleValue = 5.3;
+    public String getIncludedJsonObjectData() {
+        ObjectMapper om = new ObjectMapper();
+        try {
+            return om.writeValueAsString(includedJsonObject);
+        }catch (JsonProcessingException e) {
+            return null;
+        }
+    }
+
+    double dval = 5.3;
 
     @RawObject.Exclude
     int excludeField = 15;
