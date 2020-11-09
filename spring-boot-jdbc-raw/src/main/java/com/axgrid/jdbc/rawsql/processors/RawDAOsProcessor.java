@@ -3,6 +3,7 @@ package com.axgrid.jdbc.rawsql.processors;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
 import com.axgrid.jdbc.rawsql.RawObject;
+import com.axgrid.jdbc.rawsql.RawUtils;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethod;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAOQueryMethod;
@@ -11,9 +12,12 @@ import com.axgrid.jdbc.rawsql.processors.dto.RawObjectDescription;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.List;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawDAO")
@@ -107,7 +111,10 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setNullIfObjectEmpty(rawQuery.nullIfObjectEmpty());
-        methodDescription.setMapperType(rawQuery.mapper().getTypeName());
+        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+        List<? extends TypeMirror> mapperTypes = RawUtils.getTypeMirrorFromAnnotationValue(rawQuery::mapper);
+        if (mapperTypes != null && mapperTypes.size() > 0)
+                methodDescription.setMapperType(rawQuery.mapper()[0].getTypeName());
         return methodDescription;
     }
 

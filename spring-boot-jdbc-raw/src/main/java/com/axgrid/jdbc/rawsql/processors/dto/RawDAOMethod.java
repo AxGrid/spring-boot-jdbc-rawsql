@@ -1,6 +1,7 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
+import com.axgrid.jdbc.rawsql.RawUtils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -20,14 +21,17 @@ public class RawDAOMethod {
 
     public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement) {
         List<RawDAOMethodParameter> res = new ArrayList<>();
+        System.out.printf("METHOD:%s\n", executableElement.getSimpleName());
         for(var item : executableElement.getParameters()) {
             var parameter = new RawDAOMethodParameter();
+            System.out.printf(" --:%s\n", item.getSimpleName());
             parameter.setName(item.getSimpleName().toString());
             parameter.setType(item.asType().toString());
             parameter.setRawParamObject(item.getAnnotation(RawDAO.RawParamObject.class));
             parameter.setRawParam(item.getAnnotation(RawDAO.RawParam.class));
             res.add(parameter);
         }
+        System.out.printf(" TOTAL:%s\n", res.size());
         return res;
     }
 
@@ -35,6 +39,9 @@ public class RawDAOMethod {
         return parameters.stream().map(RawDAOMethodParameter::toString).collect(Collectors.joining(", "));
     }
 
+    public String getSimpleReturn() {
+        return RawUtils.objectToSimple(returnType);
+    }
 
     public boolean isReturnRawObject() {
         var rawParamObjectArgument = parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);

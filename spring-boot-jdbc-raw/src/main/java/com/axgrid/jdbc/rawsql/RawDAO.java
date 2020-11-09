@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface RawDAO {
 
-    @Target(ElementType.TYPE)
+    @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.SOURCE)
     @interface RawInsert {
         @AliasFor("query")
@@ -21,7 +21,7 @@ public @interface RawDAO {
         String query() default "";
     }
 
-    @Target(ElementType.TYPE)
+    @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.SOURCE)
     @interface RawQuery {
         @AliasFor("query")
@@ -29,7 +29,7 @@ public @interface RawDAO {
         @AliasFor("value")
         String query() default "";
         boolean nullIfObjectEmpty() default true;
-        Class<RowMapper<?>> mapper();
+        Class<RowMapper<?>>[] mapper() default {};
     }
 
     @Target(ElementType.METHOD)

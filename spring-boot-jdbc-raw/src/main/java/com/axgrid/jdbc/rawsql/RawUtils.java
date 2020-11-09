@@ -3,8 +3,12 @@ package com.axgrid.jdbc.rawsql;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.TypeMirror;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -22,6 +26,22 @@ public final class RawUtils {
             "double",
             "float"
     ));
+
+    @FunctionalInterface
+    public interface GetClassValue {
+        void execute() throws MirroredTypeException, MirroredTypesException;
+    }
+
+    public static List<? extends TypeMirror> getTypeMirrorFromAnnotationValue(GetClassValue c) {
+        try {
+            c.execute();
+        }
+        catch(MirroredTypesException ex) {
+            return ex.getTypeMirrors();
+        }
+        return null;
+    }
+
 
     public static String flag(boolean b) {
         return b ? "1" : "0";
@@ -100,6 +120,29 @@ public final class RawUtils {
                 return "java.lang.Double";
             case "short":
                 return "java.lang.Short";
+        }
+    }
+
+    public static String objectToSimple(String typeName) {
+        switch (typeName){
+            default:
+                return typeName;
+            case "java.lang.Long":
+                return "long";
+            case "java.lang.Integer":
+                return "int";
+            case "java.lang.Byte":
+                return "byte";
+            case "ava.lang.Character":
+                return "java.lang.Character";
+            case "char":
+                return "boolean";
+            case "java.lang.Float":
+                return "float";
+            case "java.lang.Double":
+                return "double";
+            case "java.lang.Short":
+                return "short";
         }
     }
 

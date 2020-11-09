@@ -8,6 +8,8 @@ public class MyRawObject {
     Long id;
     String name;
 
+    int age;
+
     @RawObject.Include("enum")
     MySimpleEnum quest = MySimpleEnum.No;
 

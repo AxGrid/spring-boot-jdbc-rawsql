@@ -2,10 +2,10 @@ package com.axgrid.jdbc.rawsql.processors;
 
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
 import com.axgrid.jdbc.rawsql.processors.dto.RawObjectDescription;
-import com.github.jknack.handlebars.EscapingStrategy;
-import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.*;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -18,10 +18,15 @@ public class RawTemplate {
     public RawTemplate() {
         templateLoader.setPrefix("/templates/");
         templateLoader.setSuffix(".tpl");
-
         handlebars = new Handlebars(templateLoader)
                 .with(EscapingStrategy.NOOP)
         ;
+        handlebars.registerHelper("capitalize", new Helper<String>() {
+            @Override
+            public Object apply(String s, Options options) throws IOException {
+                return StringUtils.capitalize(s);
+            }
+        });
     }
 
     @NotNull

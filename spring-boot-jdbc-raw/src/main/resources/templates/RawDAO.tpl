@@ -29,18 +29,12 @@ public class {{objectName}}RawDAO implements {{objectName}} {
     {{>RawDAOUpdate this }}
     {{~/each}}
 
-    {{~#each queryMethods}}
-    @Override
-    public {{returnType}} {{name}}({{flatParameters}}) {
-        throw new NotImplementedException("Method {{nane}} Not Implemented");
-    };
+    {{~#each insertMethods}}
+    {{>RawDAOInsert this }}
     {{~/each}}
 
     {{~#each queryMethods}}
-    @Override
-    public {{returnType}} {{name}}({{flatParameters}}) {
-        throw new NotImplementedException("Method {{nane}} Not Implemented");
-    };
+    {{>RawDAOQuery this }}
     {{~/each}}
 
 }
