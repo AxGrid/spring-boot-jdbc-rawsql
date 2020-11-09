@@ -29,12 +29,11 @@ public class RawObjectsProcessor extends AbstractProcessor {
         this.filer = pe.getFiler();
         this.messager = pe.getMessager();
         this.procEnv = pe;
-        System.out.println("--- INIT !!!!!! ---");
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("--- PROCESS !!!!!! ---");
+        System.out.println("--- PROCESS MAPPER !!!!!! ---");
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 try {

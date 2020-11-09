@@ -10,17 +10,19 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 
 
 public class {{className}} implements RowMapper<{{objectName}}> {
+{{#if fields.jsonObjects}}
+    final ObjectMapper om = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+{{/if}}
     @Override
     public {{objectName}} mapRow(ResultSet resultSet, int i) throws SQLException {
         {{objectName}} res = new {{objectName}}();
-        {{#if fields.jsonObjects}}
-        ObjectMapper om = new ObjectMapper();
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        {{/if}}
-        {{#each fields}}
-        {{#if jsonObject}}{{>JsonObject this}}
-        {{else}}{{>Field this}}{{/if}}
-        {{/each}}
+        {{~#each fields}}
+        {{~#if jsonObject}}
+        {{>JsonObject this ~}}
+        {{~else}}
+        {{>Field this ~}}
+        {{~/if}}
+        {{~/each}}
         return res;
     }
 }
