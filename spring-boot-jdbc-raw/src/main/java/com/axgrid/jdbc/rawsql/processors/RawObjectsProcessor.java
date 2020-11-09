@@ -47,6 +47,13 @@ public class RawObjectsProcessor extends AbstractProcessor {
         return true;
     }
 
+    public static RawObjectDescription getRawObjectDescription(Element element) {
+        RawObjectDescription description = new RawObjectDescription();
+        for(var field : element.getEnclosedElements())
+            createFields(field, description.getFields());
+        return description;
+    }
+
     private void createMapper(Element element) throws Exception {
         var rawObject = element.getAnnotation(RawObject.class);
         messager.printMessage(Diagnostic.Kind.NOTE, "found @RawObject at " + element);
@@ -54,13 +61,10 @@ public class RawObjectsProcessor extends AbstractProcessor {
         Name name = element.getSimpleName();
         String mapperName = name.toString() + "RawObjectMapper";
 
-        RawObjectDescription description = new RawObjectDescription();
+        RawObjectDescription description = getRawObjectDescription(element);
         description.setRawObject(rawObject);
         description.setObjectName(name.toString());
         description.setPackageName(packageElement.getQualifiedName().toString());
-
-        for(var field : element.getEnclosedElements())
-            createFields(field, description.getFields());
 
         JavaFileObject mapperFile = filer.createSourceFile(
                 packageElement.getQualifiedName() + "." + mapperName );
@@ -70,7 +74,7 @@ public class RawObjectsProcessor extends AbstractProcessor {
         writer.close();
     }
 
-    private void createFields(Element element, RawObjectFieldList list) {
+    private static void createFields(Element element, RawObjectFieldList list) {
         String name = element.getSimpleName().toString();
         var include = element.getAnnotation(RawObject.Include.class);
         var exclude = element.getAnnotation(RawObject.Exclude.class);

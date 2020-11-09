@@ -17,22 +17,37 @@ public class RawDAOMethod {
     String returnType;
     String query;
 
+    RawObjectDescription rawObject;
+
     List<RawDAOMethodParameter> parameters = new ArrayList<>();
+
 
     public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement) {
         List<RawDAOMethodParameter> res = new ArrayList<>();
-        System.out.printf("METHOD:%s\n", executableElement.getSimpleName());
         for(var item : executableElement.getParameters()) {
             var parameter = new RawDAOMethodParameter();
-            System.out.printf(" --:%s\n", item.getSimpleName());
+            parameter.setElement(item);
             parameter.setName(item.getSimpleName().toString());
             parameter.setType(item.asType().toString());
             parameter.setRawParamObject(item.getAnnotation(RawDAO.RawParamObject.class));
             parameter.setRawParam(item.getAnnotation(RawDAO.RawParam.class));
             res.add(parameter);
         }
-        System.out.printf(" TOTAL:%s\n", res.size());
         return res;
+    }
+
+    public RawObjectDescription getRawObject() {
+        return rawObject;
+    }
+
+    public void setRawObject(RawObjectDescription rawObject) {
+        this.rawObject = rawObject;
+    }
+
+    public Element getRawObjectElement() {
+        var param = this.parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
+        if (param == null) return null;
+        return param.element;
     }
 
     public String getFlatParameters() {

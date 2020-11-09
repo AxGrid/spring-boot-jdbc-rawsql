@@ -4,10 +4,7 @@ package com.axgrid.jdbc.rawsql.processors;
 import com.axgrid.jdbc.rawsql.RawDAO;
 import com.axgrid.jdbc.rawsql.RawObject;
 import com.axgrid.jdbc.rawsql.RawUtils;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethod;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOQueryMethod;
-import com.axgrid.jdbc.rawsql.processors.dto.RawObjectDescription;
+import com.axgrid.jdbc.rawsql.processors.dto.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -97,7 +94,8 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
-
+        if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject))
+            methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()));
 
         return methodDescription;
     }
@@ -112,6 +110,9 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setNullIfObjectEmpty(rawQuery.nullIfObjectEmpty());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+        if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject))
+            methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()));
+
         List<? extends TypeMirror> mapperTypes = RawUtils.getTypeMirrorFromAnnotationValue(rawQuery::mapper);
         if (mapperTypes != null && mapperTypes.size() > 0)
                 methodDescription.setMapperType(rawQuery.mapper()[0].getTypeName());

@@ -2,15 +2,26 @@ package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
 
+import javax.lang.model.element.Element;
+
 public class RawDAOMethodParameter {
     String name;
     String type;
+    Element element;
     RawDAO.RawParam rawParam;
     RawDAO.RawParamObject rawParamObject;
 
     @Override
     public String toString() {
         return String.format("%s %s", type, name);
+    }
+
+    public Element getElement() {
+        return element;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
     }
 
     public boolean isRawParamObject() {

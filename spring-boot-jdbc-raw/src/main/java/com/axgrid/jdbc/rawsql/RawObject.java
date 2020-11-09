@@ -32,4 +32,9 @@ public @interface RawObject {
     @Retention(RetentionPolicy.SOURCE)
     @interface JsonObject { }
 
+    @Target({ElementType.FIELD, ElementType.METHOD})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface EnumToInteger { }
+
+
 }
