@@ -26,10 +26,7 @@ public class {{objectName}}RawDAO implements {{objectName}} {
     {{~/each}}
 
     {{~#each updateMethods}}
-    @Override
-    public {{returnType}} {{name}}({{flatParameters}}) {
-        throw new NotImplementedException("Method {{nane}} Not Implemented");
-    };
+    {{>RawDAOUpdate this }}
     {{~/each}}
 
     {{~#each queryMethods}}

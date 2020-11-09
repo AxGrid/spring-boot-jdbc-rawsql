@@ -35,10 +35,17 @@ public class RawDAOMethod {
         return parameters.stream().map(RawDAOMethodParameter::toString).collect(Collectors.joining(", "));
     }
 
+
     public boolean isReturnRawObject() {
         var rawParamObjectArgument = parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
         if (rawParamObjectArgument == null) return false;
         return returnType.equals(rawParamObjectArgument.type);
+    }
+
+    public String getRawObjectName() {
+        var rawParamObjectArgument = parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
+        if (rawParamObjectArgument == null) return null;
+        return rawParamObjectArgument.name;
     }
 
     public List<RawDAOMethodParameter> getParameters() {
