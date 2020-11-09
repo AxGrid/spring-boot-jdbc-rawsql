@@ -15,6 +15,35 @@ import org.springframework.dao.EmptyResultDataAccessException;
 @Service
 public class {{objectName}}RawDAO implements {{objectName}} {
 
+    @Autowired
+    NamedParameterJdbcTemplate jdbcTemplate;
 
+    {{#each undefinedMethods}}
+    @Override
+    public {{returnType}} {{name}}({{flatParameters}}) {
+        throw new NotImplementedException("Method {{nane}} Not Implemented");
+    };
+    {{~/each}}
+
+    {{~#each updateMethods}}
+    @Override
+    public {{returnType}} {{name}}({{flatParameters}}) {
+        throw new NotImplementedException("Method {{nane}} Not Implemented");
+    };
+    {{~/each}}
+
+    {{~#each queryMethods}}
+    @Override
+    public {{returnType}} {{name}}({{flatParameters}}) {
+        throw new NotImplementedException("Method {{nane}} Not Implemented");
+    };
+    {{~/each}}
+
+    {{~#each queryMethods}}
+    @Override
+    public {{returnType}} {{name}}({{flatParameters}}) {
+        throw new NotImplementedException("Method {{nane}} Not Implemented");
+    };
+    {{~/each}}
 
 }

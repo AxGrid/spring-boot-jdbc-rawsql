@@ -19,7 +19,7 @@ import java.util.Set;
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawDAO")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedOptions("debug")
-public class RawDAOProcessor extends AbstractProcessor {
+public class RawDAOsProcessor extends AbstractProcessor {
 
     private Filer filer;
     private Messager messager;
@@ -54,7 +54,7 @@ public class RawDAOProcessor extends AbstractProcessor {
         messager.printMessage(Diagnostic.Kind.NOTE, "found @RawDAO at " + element);
         PackageElement packageElement = procEnv.getElementUtils().getPackageOf( element );
         Name name = element.getSimpleName();
-        String mapperName = name.toString() + "RawObjectMapper";
+        String mapperName = name.toString() + "RawDAO";
 
         RawDAODescription description = new RawDAODescription();
         description.setRawDAO(rawDAO);
@@ -93,6 +93,8 @@ public class RawDAOProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+
+
         return methodDescription;
     }
 

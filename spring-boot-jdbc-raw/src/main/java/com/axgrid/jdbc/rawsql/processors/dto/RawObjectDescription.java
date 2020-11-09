@@ -25,7 +25,6 @@ public class RawObjectDescription {
         return new ArrayList<>(fields.values());
     }
 
-
     public String getPackageName() {
         return packageName;
     }

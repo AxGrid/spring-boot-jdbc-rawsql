@@ -6,6 +6,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RawDAOMethod {
 
@@ -28,6 +29,16 @@ public class RawDAOMethod {
             res.add(parameter);
         }
         return res;
+    }
+
+    public String getFlatParameters() {
+        return parameters.stream().map(RawDAOMethodParameter::toString).collect(Collectors.joining(", "));
+    }
+
+    public boolean isReturnRawObject() {
+        var rawParamObjectArgument = parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
+        if (rawParamObjectArgument == null) return false;
+        return returnType.equals(rawParamObjectArgument.type);
     }
 
     public List<RawDAOMethodParameter> getParameters() {

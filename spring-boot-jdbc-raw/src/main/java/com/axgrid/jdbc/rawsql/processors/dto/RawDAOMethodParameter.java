@@ -8,6 +8,15 @@ public class RawDAOMethodParameter {
     RawDAO.RawParam rawParam;
     RawDAO.RawParamObject rawParamObject;
 
+    @Override
+    public String toString() {
+        return String.format("%s %s", type, name);
+    }
+
+    public boolean isRawParamObject() {
+        return rawParamObject != null;
+    }
+
     public String getName() {
         return name;
     }

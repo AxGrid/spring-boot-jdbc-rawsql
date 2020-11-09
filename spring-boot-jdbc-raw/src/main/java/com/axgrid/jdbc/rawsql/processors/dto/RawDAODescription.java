@@ -5,6 +5,7 @@ import com.axgrid.jdbc.rawsql.RawObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Описание DAO
@@ -15,7 +16,26 @@ public class RawDAODescription {
     private String objectName;
     private RawDAO rawDAO;
 
+    public String getClassName() { return objectName + "RawDAO"; }
+
     private final List<RawDAOMethod> methods = new ArrayList<>();
+
+    public List<RawDAOMethod> getUpdateMethods() {
+        return methods.stream().filter(item -> item.method.equals("update")).collect(Collectors.toList());
+    }
+
+    public List<RawDAOMethod> getQueryMethods() {
+        return methods.stream().filter(item -> item.method.equals("query")).collect(Collectors.toList());
+    }
+
+    public List<RawDAOMethod> getInsertMethods() {
+        return methods.stream().filter(item -> item.method.equals("insert")).collect(Collectors.toList());
+    }
+
+    public List<RawDAOMethod> getUndefinedMethods() {
+        return methods.stream().filter(item -> item.method.equals("undefined")).collect(Collectors.toList());
+    }
+
 
     public List<RawDAOMethod> getMethods() {
         return methods;

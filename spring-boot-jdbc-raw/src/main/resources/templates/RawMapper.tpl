@@ -18,9 +18,9 @@ public class {{className}} implements RowMapper<{{objectName}}> {
         {{objectName}} res = new {{objectName}}();
         {{~#each fields}}
         {{~#if jsonObject}}
-        {{>JsonObject this ~}}
+        {{>RawMapperJsonObject this ~}}
         {{~else}}
-        {{>Field this ~}}
+        {{>RawMapperField this ~}}
         {{~/if}}
         {{~/each}}
         return res;

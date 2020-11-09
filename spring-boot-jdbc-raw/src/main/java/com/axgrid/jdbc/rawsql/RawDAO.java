@@ -41,7 +41,7 @@ public @interface RawDAO {
         String query() default "";
     }
 
-    @Target(ElementType.METHOD)
+    @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.SOURCE)
     @interface RawParam {
         @AliasFor("name")
@@ -50,7 +50,7 @@ public @interface RawDAO {
         String name() default "";
     }
 
-    @Target(ElementType.METHOD)
+    @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.SOURCE)
     @interface RawParamObject {
     }
