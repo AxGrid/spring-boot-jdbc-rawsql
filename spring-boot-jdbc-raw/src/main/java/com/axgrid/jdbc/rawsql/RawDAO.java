@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 public @interface RawDAO {
 
     @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.SOURCE)
     @interface RawInsert {
         @AliasFor("query")
         String value() default "";
@@ -22,7 +21,6 @@ public @interface RawDAO {
     }
 
     @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.SOURCE)
     @interface RawQuery {
         @AliasFor("query")
         String value() default "";
@@ -33,7 +31,6 @@ public @interface RawDAO {
     }
 
     @Target(ElementType.METHOD)
-    @Retention(RetentionPolicy.SOURCE)
     @interface RawUpdate {
         @AliasFor("query")
         String value() default "";
@@ -42,7 +39,6 @@ public @interface RawDAO {
     }
 
     @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.SOURCE)
     @interface RawParam {
         @AliasFor("name")
         String value() default "";
@@ -51,7 +47,6 @@ public @interface RawDAO {
     }
 
     @Target(ElementType.PARAMETER)
-    @Retention(RetentionPolicy.SOURCE)
     @interface RawParamObject {
     }
 }

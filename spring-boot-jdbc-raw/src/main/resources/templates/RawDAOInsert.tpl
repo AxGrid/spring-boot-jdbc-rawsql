@@ -1,17 +1,7 @@
 @Override
     public {{returnType}} {{name}}({{flatParameters}}) {
     {{~#if rawObjectName }}
-        var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
-            @Override
-            public Object getValue(String paramName) throws IllegalArgumentException {
-                Object value = super.getValue(paramName);
-                if (value instanceof Enum) {
-                    return value.toString();
-                }
-                log.info("ADD PARAM {} is {}", paramName, value);
-                return value;
-            }
-        };
+        {{>RawDAOProperty this}}
     {{~else}}
         Map parameters = new HashMap();
         {{~#each parameters}}parameters.put("{{name}}", {{name}});

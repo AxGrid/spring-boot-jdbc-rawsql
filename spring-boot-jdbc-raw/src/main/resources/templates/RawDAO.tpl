@@ -13,12 +13,18 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import lombok.extern.slf4j.Slf4j;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 @Slf4j
 @Service
 public class {{objectName}}RawDAO implements {{objectName}} {
 
     @Autowired
     NamedParameterJdbcTemplate jdbcTemplate;
+
+    final ObjectMapper om = new ObjectMapper();
 
     {{#each undefinedMethods}}
     @Override

@@ -14,11 +14,14 @@ public class RawObjectField {
     String type;
     String fieldName;
     boolean setter = false;
+    boolean getter = false;
     boolean field = false;
 
     boolean include;
     boolean exclude;
     boolean jsonObject = false;
+
+    String valueProcessor = null;
 
     public String getFromResultSet() {
         return RawUtils.getFromResultSet(getFieldName(), type);
@@ -28,6 +31,14 @@ public class RawObjectField {
         return "set" + StringUtils.capitalize(name);
     }
 
+    public String getValueProcessor() {
+        return valueProcessor;
+    }
+
+    public void setValueProcessor(String valueProcessor) {
+        this.valueProcessor = valueProcessor;
+    }
+
     public String getDefault() {
         return RawUtils.getTypeDefaultValue(type);
     }
@@ -35,7 +46,6 @@ public class RawObjectField {
     public String getObjectType() {
         return RawUtils.isSimpleType(type) ? RawUtils.simpleToObject(type) : type;
     }
-
 
     @Override
     public String toString() {

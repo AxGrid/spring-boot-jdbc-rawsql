@@ -36,6 +36,30 @@ public class RawDAOMethod {
         return res;
     }
 
+    public int  getProcessorFieldsSize() {
+        return getProcessorFields().size();
+    }
+
+    public int  getFieldsSize() {
+        return rawObject.getFieldsList().size();
+    }
+
+    public String getFieldsString() {
+        return rawObject.getFieldsList().stream().map(field -> String.format("T:%s, N:%s, J:%s, VP:%s, ",
+                field.getType(), field.getFieldName(), field.jsonObject,
+                field.valueProcessor)).collect(Collectors.joining("\n"));
+    }
+
+
+    public List<RawObjectField> getProcessorFields() {
+        var pf = rawObject.getFieldsList()
+                .stream()
+                .filter(item -> item.getValueProcessor() != null && !item.getValueProcessor().equals(""))
+                .collect(Collectors.toList());
+        System.out.println("---- GET PROCESSOR FIELDS " +name+ " ---- " + pf.size() + " " + rawObject.getFieldsList().size());
+        return pf;
+    }
+
     public RawObjectDescription getRawObject() {
         return rawObject;
     }
@@ -47,6 +71,7 @@ public class RawDAOMethod {
     public Element getRawObjectElement() {
         var param = this.parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
         if (param == null) return null;
+        System.out.println("Get raw OBJECT Element: Name:" + param.name +" Type:" + param.type+" Element:"+ param.element);
         return param.element;
     }
 

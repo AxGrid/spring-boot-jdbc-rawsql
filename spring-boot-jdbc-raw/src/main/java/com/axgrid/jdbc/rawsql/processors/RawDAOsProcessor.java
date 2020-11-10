@@ -2,29 +2,41 @@ package com.axgrid.jdbc.rawsql.processors;
 
 
 import com.axgrid.jdbc.rawsql.RawDAO;
-import com.axgrid.jdbc.rawsql.RawObject;
+import com.axgrid.jdbc.rawsql.RawElementUtils;
 import com.axgrid.jdbc.rawsql.RawUtils;
-import com.axgrid.jdbc.rawsql.processors.dto.*;
+import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
+import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethod;
+import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethodParameter;
+import com.axgrid.jdbc.rawsql.processors.dto.RawDAOQueryMethod;
+import com.oracle.truffle.dsl.processor.java.ElementUtils;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
 import java.util.List;
 import java.util.Set;
 
-@SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawDAO")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedAnnotationTypes({"com.axgrid.jdbc.rawsql.RawDAO"})
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedOptions("debug")
 public class RawDAOsProcessor extends AbstractProcessor {
 
     private Filer filer;
     private Messager messager;
     private ProcessingEnvironment procEnv;
+    private RoundEnvironment roundEnv;
+
+    TypeElement annotationRawObject;
+
+    final Types typeUtils() { return processingEnv.getTypeUtils(); }
+    final Elements elementUtils() { return processingEnv.getElementUtils(); }
 
     @Override
     public synchronized void init(ProcessingEnvironment pe) {
@@ -32,12 +44,22 @@ public class RawDAOsProcessor extends AbstractProcessor {
         this.filer = pe.getFiler();
         this.messager = pe.getMessager();
         this.procEnv = pe;
+
+    }
+
+    public Element getElement(TypeMirror type) {
+        var e = processingEnv.getTypeUtils().asElement(type);
+        if (e != null) return e;
+        throw new RuntimeException("RawSQL Element " + type.toString() + " not found.");
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("--- PROCESS DAO !!!!!! ---");
+        this.roundEnv = roundEnv;
+        System.out.println("--- PROCESS DAO !!!!!! --- " + annotations.size());
+
         for (TypeElement annotation : annotations) {
+            messager.printMessage(Diagnostic.Kind.NOTE, "Raw DAO process annotation: " + annotation.getSimpleName());
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 try {
                     createDAO(element);
@@ -94,9 +116,17 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
-        if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject))
-            methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()));
+        System.out.println("---- CREATE FIELDS FOR PROCESSORS  --- " + method);
+        if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject)) {
+            System.out.println("---- RO FIELDS Name:" + methodDescription.getRawObjectElement().asType() + " --- " + RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()).getFields().values().size());
+            //DeclaredType declaredFieldType = (DeclaredType) methodDescription.getRawObjectElement().asType();
 
+            //TypeElement fieldTypeElement = ElementUtils.fromTypeMirror(methodDescription.getRawObjectElement().asType());
+            //TypeElement fieldTypeElement = (TypeElement) declaredFieldType.asElement();
+            Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType()); // RawElementUtils.getFromMirrorType(typeUtils(), methodDescription.getRawObjectElement().asType());
+            System.out.println("---- RO TYPE Name:" + fieldTypeElement.getSimpleName() + " ----");
+            methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(fieldTypeElement));
+        }
         return methodDescription;
     }
 

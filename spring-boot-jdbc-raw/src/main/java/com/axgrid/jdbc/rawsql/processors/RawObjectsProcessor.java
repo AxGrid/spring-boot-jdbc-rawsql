@@ -15,7 +15,7 @@ import java.io.Writer;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawObject")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedOptions("debug")
 public class RawObjectsProcessor extends AbstractProcessor {
 
@@ -49,7 +49,8 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
     public static RawObjectDescription getRawObjectDescription(Element element) {
         RawObjectDescription description = new RawObjectDescription();
-        for(var field : element.getEnclosedElements())
+
+        for(var field : element.getEnclosedElements()) //TODO: Order by field, setter, getter
             createFields(field, description.getFields());
         return description;
     }
@@ -79,18 +80,31 @@ public class RawObjectsProcessor extends AbstractProcessor {
         var include = element.getAnnotation(RawObject.Include.class);
         var exclude = element.getAnnotation(RawObject.Exclude.class);
         var jsonObject  = element.getAnnotation(RawObject.JsonObject.class);
+        var enumToInteger  = element.getAnnotation(RawObject.EnumToInteger.class);
+        var processor  = element.getAnnotation(RawObject.Processor.class);
 
         RawObjectField field;
         if (!element.getKind().isField()) { // Method
             ExecutableElement executableElement = (ExecutableElement) element;
-            if (!RawUtils.isSetter(name) || executableElement.getTypeParameters().size() != 1) return; //Какой-то другой метод
-            field = list.get(RawUtils.getSetterName(name));
-            field.setType(executableElement.getTypeParameters().get(0).asType().toString());
-            field.setSetter(true);
+            if (RawUtils.isGetter(name) && executableElement.getTypeParameters().size() != 0) {
+                field = list.get(RawUtils.getGetterName(name));
+                //var elementType = executableElement getTypeParameters().get(0);
+                //field.setType(elementType.asType().toString());
+                field.setSetter(true);
+            }
+            else if (RawUtils.isSetter(name) && executableElement.getTypeParameters().size() == 1) {
+                field = list.get(RawUtils.getSetterName(name));
+                var elementType = executableElement.getTypeParameters().get(0);
+                field.setType(elementType.asType().toString());
+                field.setSetter(true);
+            } else {
+                return;
+            }
         } else {
             field = list.get(name);
             field.setField(true);
             field.setType(element.asType().toString());
+
         }
 
         if (exclude != null) field.setExclude(true);
@@ -98,7 +112,26 @@ public class RawObjectsProcessor extends AbstractProcessor {
             field.setInclude(true);
             field.setFieldName(include.value() + include.fieldName());
         }
-        if (jsonObject != null)
+        if (jsonObject != null) {
             field.setJsonObject(true);
+            field.setValueProcessor("json");
+        }
+
+        if (enumToInteger != null) {
+            field.setValueProcessor("enumToInt");
+        }
+
+        if (element.getAnnotation(RawObject.EnumToOrdinal.class) != null) {
+            field.setValueProcessor("enumToOrdinal");
+        }
+
+        if (processor != null) {
+            field.setValueProcessor(processor.value() + processor.name());
+        }
+
+
+
     }
+
+
 }

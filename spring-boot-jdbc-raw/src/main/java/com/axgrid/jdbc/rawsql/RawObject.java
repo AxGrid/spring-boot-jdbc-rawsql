@@ -16,7 +16,7 @@ public @interface RawObject {
     boolean useFieldsOnly() default false;
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @Retention(RetentionPolicy.SOURCE)
+    //@Retention(RetentionPolicy.SOURCE)
     @interface Include {
         @AliasFor("fieldName")
         String value() default "";
@@ -25,16 +25,24 @@ public @interface RawObject {
     }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @Retention(RetentionPolicy.SOURCE)
     @interface Exclude { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @Retention(RetentionPolicy.SOURCE)
     @interface JsonObject { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @Retention(RetentionPolicy.SOURCE)
     @interface EnumToInteger { }
 
+    @Target({ElementType.FIELD, ElementType.METHOD})
+    @interface EnumToOrdinal { }
+
+
+    @Target({ElementType.FIELD, ElementType.METHOD})
+    @interface Processor{
+        @AliasFor("name")
+        String value() default "";
+        @AliasFor("value")
+        String name() default "";
+    }
 
 }

@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public final class RawUtils {
     static Pattern listPattern =  Pattern.compile("^(.*)<(.*)>$");
     static Pattern setterPattern =  Pattern.compile("^set(\\w+)$");
+    static Pattern getterPattern =  Pattern.compile("^get(\\w+)$");
 
     final static Set<String> primitiveName = new HashSet<>(Arrays.asList(
             "long",
@@ -156,8 +157,18 @@ public final class RawUtils {
         return setterPattern.matcher(name).find();
     }
 
+    public static boolean isGetter(String name) {
+        return getterPattern.matcher(name).find();
+    }
+
     public static String getSetterName(String name) {
         var matcher = setterPattern.matcher(name);
+        if (!matcher.find()) return null;
+        return StringUtils.uncapitalize(matcher.group(1));
+    }
+
+    public static String getGetterName(String name) {
+        var matcher = getterPattern.matcher(name);
         if (!matcher.find()) return null;
         return StringUtils.uncapitalize(matcher.group(1));
     }

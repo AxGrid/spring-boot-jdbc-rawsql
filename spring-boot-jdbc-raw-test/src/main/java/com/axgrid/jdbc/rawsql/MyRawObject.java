@@ -15,24 +15,12 @@ public class MyRawObject {
     MySimpleEnum enumString = MySimpleEnum.No;
 
     @RawObject.Include("enum2")
+    @RawObject.EnumToOrdinal
     MySimpleEnum enumInt = MySimpleEnum.No;
-
-    public int getEnumIntValue() {
-        return enumInt.ordinal();
-    }
 
     @RawObject.Include("data")
     @RawObject.JsonObject
     MyIncludedJsonObject includedJsonObject;
-
-    public String getIncludedJsonObjectData() {
-        ObjectMapper om = new ObjectMapper();
-        try {
-            return om.writeValueAsString(includedJsonObject);
-        }catch (JsonProcessingException e) {
-            return null;
-        }
-    }
 
     double dval = 5.3;
 
