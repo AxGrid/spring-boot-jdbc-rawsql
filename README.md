@@ -128,15 +128,15 @@ RawDAO attributes
 
 **@RawDAO.RawInsert** - mark method for insert sql command.
 
- * query - set query with parameters "INSERT INTO my_table (name, age) VALUES (:name, age)"
+ * query - set query with parameters `"INSERT INTO my_table (name, age) VALUES (:name, age)"`
 
 **@RawDAO.Update** - create DAO interface
 
- * query - set query with parameters "UPDATE my_table SET name=:name, age=:age WHERE id=:id"
+ * query - set query with parameters `"UPDATE my_table SET name=:name, age=:age WHERE id=:id"`
 
 **@RawDAO.Query**  - create DAO interface
   
- * query  - set query with parameters "SELECT * FROM my_table WHERE id=:id"
+ * query  - set query with parameters `"SELECT * FROM my_table WHERE id=:id"`
  * mapper - set custom mapper
  * nullIfObjectEmpty - return null if result is empty (default: true)  
 
