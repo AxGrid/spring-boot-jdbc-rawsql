@@ -70,7 +70,7 @@ public class RawDAOMethod {
             parameter.setElement(item);
             parameter.setName(item.getSimpleName().toString());
             parameter.setType(item.asType().toString());
-            parameter.setRawParamObject(item.getAnnotation(RawDAO.RawParamObject.class));
+            parameter.setRawParamObject(item.getAnnotation(RawParam.RawParamObject.class));
             parameter.setRawParam(item.getAnnotation(RawParam.class));
 
             if (item.getAnnotation(RawParam.JsonObject.class) != null)

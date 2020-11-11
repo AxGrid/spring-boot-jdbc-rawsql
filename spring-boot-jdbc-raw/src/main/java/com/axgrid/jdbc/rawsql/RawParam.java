@@ -51,4 +51,8 @@ public @interface RawParam {
         String[] params() default {};
     }
 
+    @Target(ElementType.PARAMETER)
+    @interface RawParamObject {
+    }
+
 }

@@ -12,7 +12,7 @@ public class RawDAOMethodParameter {
     String type;
     Element element;
     RawParam rawParam;
-    RawDAO.RawParamObject rawParamObject;
+    RawParam.RawParamObject rawParamObject;
     String valueProcessor = null;
     final List<String> valueProcessorArguments = new ArrayList<>();
 
@@ -69,11 +69,11 @@ public class RawDAOMethodParameter {
         this.rawParam = rawParam;
     }
 
-    public RawDAO.RawParamObject getRawParamObject() {
+    public RawParam.RawParamObject getRawParamObject() {
         return rawParamObject;
     }
 
-    public void setRawParamObject(RawDAO.RawParamObject rawParamObject) {
+    public void setRawParamObject(RawParam.RawParamObject rawParamObject) {
         this.rawParamObject = rawParamObject;
     }
 }

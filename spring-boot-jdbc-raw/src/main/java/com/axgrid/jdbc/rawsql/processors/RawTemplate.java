@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class RawTemplate {
 

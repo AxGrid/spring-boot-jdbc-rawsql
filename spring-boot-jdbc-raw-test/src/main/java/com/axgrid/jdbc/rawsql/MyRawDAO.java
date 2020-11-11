@@ -7,15 +7,15 @@ import java.util.List;
 public interface MyRawDAO {
 
     @RawDAO.RawUpdate("update my_table set name=:name, age=:age where id=:id")
-    MyRawObject updateObject(@RawDAO.RawParamObject MyRawObject obj);
+    MyRawObject updateObject(@RawParam.RawParamObject MyRawObject obj);
 
     @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
             "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
-    long createObject(@RawDAO.RawParamObject MyRawObject obj);
+    long createObject(@RawParam.RawParamObject MyRawObject obj);
 
     @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
             "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
-    MyRawObject createObject2(@RawDAO.RawParamObject MyRawObject obj);
+    MyRawObject createObject2(@RawParam.RawParamObject MyRawObject obj);
 
 
     @RawDAO.RawQuery("select * from my_table where id=:id")

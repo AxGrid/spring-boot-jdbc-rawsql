@@ -38,7 +38,7 @@ public @interface RawDAO {
         String query() default "";
     }
 
-    @Target(ElementType.PARAMETER)
-    @interface RawParamObject {
-    }
+//    @Target(ElementType.PARAMETER)
+//    @interface RawParamObject {
+//    }
 }

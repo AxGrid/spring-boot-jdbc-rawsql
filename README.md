@@ -6,10 +6,22 @@ RawSQL
 spring-boot-jdbc helper for mapper and sql-dao creation.
 
 
+Install
+-------
+
+add dependency into pom.xml
+```xml 
+<dependency>
+    <groupId>com.axgrid.jdbc.rawsql</groupId>
+    <artifactId>spring-boot-jdbc-raw</artifactId>
+    <version>${rawsql.version}</version>
+</dependency>
+```
+
+
 Simple usage
 ------------
 ```java
-
 @Data
 @RawObject
 public class MyRawObject {
@@ -48,12 +60,10 @@ public class MyRawObject {
     @RawObject.Exclude
     int excludeField = 15;
 }
-
 ```
 
 
 ```java
-
 // Create object and return ID
 @RawDAO.RawInsert("insert into my_table " +
  "(`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
@@ -73,11 +83,10 @@ List<MyRawObject> getByAge(int age);
 @RawDAO.RawQuery(value = "select enum2 from my_table where id=:id")
 @RawResult.OrdinalToEnum
 MySimpleEnum getEnumById(long id);
-
 ```
 
-Attributes and helpers
-----------------------
+RawObject attributes
+--------------------
 **@RawObject** - create mapper for this object
   
  * onlyIncludedFields - flag, exclude all fields
@@ -111,3 +120,47 @@ Attributes and helpers
  * format - set format (default "yyyy-MM-dd hh:mm:ss")
 
 **@RawObject.DateToLong** - cast Date to long into database
+
+RawDAO attributes
+-----------------
+
+**@RawDAO** - create DAO interface
+
+**@RawDAO.RawInsert** - mark method for insert sql command.
+
+ * query - set query with parameters "INSERT INTO my_table (name, age) VALUES (:name, age)"
+
+**@RawDAO.Update** - create DAO interface
+
+ * query - set query with parameters "UPDATE my_table SET name=:name, age=:age WHERE id=:id"
+
+**@RawDAO.Query**  - create DAO interface
+  
+ * query  - set query with parameters "SELECT * FROM my_table WHERE id=:id"
+ * mapper - set custom mapper
+ * nullIfObjectEmpty - return null if result is empty (default: true)  
+
+RawParam attributes
+-------------------
+
+**@RawParam** - mark parameter
+
+ * name - set parameter name
+
+**@RawParam.RawParamObject** - set parameter as RawParameterObject for direct get fields from object
+
+**@RawParam.JsonObject** - set parameter as Json object for direct get fields from object
+
+**@RawParam.ProtoObject** - set parameter as Protobuf object for direct get fields from object
+
+**@RawParam.EnumToString** - set parameter for cast Enum to String
+
+**@RawParam.EnumToInteger** - set parameter for cast Enum to Integer
+
+**@RawParam.EnumToOrdinal** - set parameter for cast Enum to Ordinal-Integer
+
+**@RawParam.DateToString** - set parameter for cast Date to String
+
+**@RawParam.DateToLong** - set parameter for cast Date to Long
+
+
