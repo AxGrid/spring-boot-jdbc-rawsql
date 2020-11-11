@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,6 +46,31 @@ public class TestRaw {
         Assert.assertEquals(o.getAge(), o2.getAge());
         Assert.assertEquals(o.getIncludedJsonObject().getTextField(), o2.getIncludedJsonObject().getTextField());
         Assert.assertEquals(o.getName(), o2.getName());
+    }
+
+    @Test
+    public void testNullObject() throws Exception {
+        MyRawObject o = dao.getById(Long.MAX_VALUE);
+        Assert.assertNull(o);
+        try {
+            o = dao.getByIdWithException(Long.MAX_VALUE);
+            Assert.fail();
+        }catch (EmptyResultDataAccessException e) {
+            Assert.assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testCreateObjectWithId() throws Exception {
+        MyRawObject o = new MyRawObject();
+        o.setAge(18);
+        o.setEnumInt(MySimpleEnum.Yes);
+        o.setEnumString(MySimpleEnum.Yes);
+        o.setName("test name");
+        o = dao.createObject2(o);
+        log.info("NewObject:{}",o);
+        Assert.assertNotNull(o.getId());
+        Assert.assertNotEquals((long)o.getId(), 0);
     }
 
     @Test

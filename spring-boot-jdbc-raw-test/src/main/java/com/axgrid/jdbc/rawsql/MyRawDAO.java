@@ -20,6 +20,11 @@ public interface MyRawDAO {
             "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
     long createObject(@RawDAO.RawParamObject MyRawObject obj);
 
+    @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
+            "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
+    MyRawObject createObject2(@RawDAO.RawParamObject MyRawObject obj);
+
+
     @RawDAO.RawQuery("select * from my_table where id=:id")
     MyRawObject getById(@RawParam("id") long id);
 
@@ -32,5 +37,7 @@ public interface MyRawDAO {
     @RawDAO.RawQuery("select * from my_table where enum2=:e")
     List<MyRawObject> getByEnum2(@RawParam.EnumToOrdinal MySimpleEnum e);
 
+    @RawDAO.RawQuery(value = "select * from my_table where id=:id", nullIfObjectEmpty = false)
+    MyRawObject getByIdWithException(long id);
 
 }
