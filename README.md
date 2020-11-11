@@ -75,3 +75,39 @@ List<MyRawObject> getByAge(int age);
 MySimpleEnum getEnumById(long id);
 
 ```
+
+Attributes and helpers
+----------------------
+**@RawObject** - create mapper for this object
+  
+ * onlyIncludedFields - flag, exclude all fields
+ * includeFields - include field list
+ * excludedFields - exclude field list
+ * useFieldsOnly - flag, don't user setter/getter
+ 
+**@RawObject.Include** - include this field or method
+
+ * fieldName - set database field name for mapper
+
+**@RawObject.Exclude** - exclude this field or method
+
+**@RawObject.JsonObject** - mark field for auto create String-JSON serialization in database
+
+**@RawObject.ProtoObject** - mark field for auto create Binary-Protobuf serialization in database
+
+**@RawObject.EnumToString** - cast enum to String into database
+
+ * getter - set method for get String value (default toString) 
+ * setter - set static-method for set String value (default valueOf)
+
+**@RawObject.EnumToInteger** - cast enum to Integer into database
+ 
+ * getter - set method for get String value (default getNumber) 
+ * setter - set static-method for set String value (default forNumber)
+
+**@RawObject.EnumToOrdinal** - cast enum to ordinal-integer into database
+
+**@RawObject.DateToString** - cast Date to String into database
+ * format - set format (default "yyyy-MM-dd hh:mm:ss")
+
+**@RawObject.DateToLong** - cast Date to long into database
