@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Data
 @RawObject
-@Slf4j
 public class MyRawObject {
     Long id;
     String name;
@@ -39,7 +38,6 @@ public class MyRawObject {
     public Date getStringDate() { return time; }
 
     public void setStringDate(Date date) {
-        log.debug("Try insert string date is {}", date);
     }
 
     double dval = 5.3;
