@@ -3,10 +3,6 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
             public Object getValue(String paramName) throws IllegalArgumentException {
                 Object value = super.getValue(paramName);
                 if (value == null) return value;
-                // Size:{{processorFieldsSize}} {{fieldsSize}}
-                /*
-                {{fieldsString}}
-                */
                 {{#each processorFields}}
                 if (paramName.equals("{{name}}")) {
                 {{~#equals valueProcessor 'json'}}
@@ -18,13 +14,16 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
                     }
                 {{/equals}}
                 {{~#equals valueProcessor 'enumToInt'}}
-                    value = (({{type}})value).getNumber();
+                    value = (({{type}})value).{{valueProcessorArguments.[0]}}();
                 {{/equals}}
                 {{~#equals valueProcessor 'enumToOrdinal'}}
                     value = (({{type}})value).ordinal();
                 {{/equals}}
-                {{~#equals valueProcessor 'timeToLong'}}
+                {{~#equals valueProcessor 'dateToLong'}}
                     value = (({{type}})value).getTime();
+                {{/equals}}
+                {{~#equals valueProcessor 'dateToString'}}
+                    value = new SimpleDateFormat("{{valueProcessorArguments.[0]}}").format(({{type}})value);
                 {{/equals}}
                 }
                 {{/each}}

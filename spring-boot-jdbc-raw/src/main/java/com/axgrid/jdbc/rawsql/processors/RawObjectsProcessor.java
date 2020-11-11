@@ -77,6 +77,7 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
     private static void createFields(Element element, RawObjectFieldList list) {
         String name = element.getSimpleName().toString();
+        System.out.println("Process element "+name);
         var include = element.getAnnotation(RawObject.Include.class);
         var exclude = element.getAnnotation(RawObject.Exclude.class);
         var jsonObject  = element.getAnnotation(RawObject.JsonObject.class);
@@ -86,18 +87,20 @@ public class RawObjectsProcessor extends AbstractProcessor {
         RawObjectField field;
         if (!element.getKind().isField()) { // Method
             ExecutableElement executableElement = (ExecutableElement) element;
-            if (RawUtils.isGetter(name) && executableElement.getTypeParameters().size() != 0) {
+            if (RawUtils.isGetter(name) && executableElement.getTypeParameters().size() == 0) {
                 field = list.get(RawUtils.getGetterName(name));
-                //var elementType = executableElement getTypeParameters().get(0);
-                //field.setType(elementType.asType().toString());
-                field.setSetter(true);
+                var elementType = executableElement.getReturnType();
+                field.setType(elementType.toString());
+                field.setGetter(true);
             }
-            else if (RawUtils.isSetter(name) && executableElement.getTypeParameters().size() == 1) {
+            else if (RawUtils.isSetter(name) && executableElement.getParameters().size() == 1) {
                 field = list.get(RawUtils.getSetterName(name));
-                var elementType = executableElement.getTypeParameters().get(0);
+                var elementType = executableElement.getParameters().get(0);
                 field.setType(elementType.asType().toString());
                 field.setSetter(true);
             } else {
+
+                System.out.printf("Process setter form %s, %s %s\n", name, RawUtils.isSetter(name), executableElement.getParameters().size());
                 return;
             }
         } else {
@@ -119,17 +122,29 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
         if (enumToInteger != null) {
             field.setValueProcessor("enumToInt");
+            field.getValueProcessorArguments().add(enumToInteger.getter());
+            field.getValueProcessorArguments().add(enumToInteger.setter());
         }
 
         if (element.getAnnotation(RawObject.EnumToOrdinal.class) != null) {
             field.setValueProcessor("enumToOrdinal");
         }
 
+        if (element.getAnnotation(RawObject.DateToLong.class) != null) {
+            field.setValueProcessor("dateToLong");
+        }
+
+        var dateToString = element.getAnnotation(RawObject.DateToString.class);
+        if (dateToString != null) {
+            field.setValueProcessor("dateToString");
+            field.getValueProcessorArguments().add(dateToString.format());
+        }
+
         if (processor != null) {
             field.setValueProcessor(processor.value() + processor.name());
         }
 
-
+        System.out.println("   valueProcessor:"+field.getValueProcessor());
 
     }
 

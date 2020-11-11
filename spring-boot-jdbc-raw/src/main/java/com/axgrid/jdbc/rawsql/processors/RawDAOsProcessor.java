@@ -2,18 +2,15 @@ package com.axgrid.jdbc.rawsql.processors;
 
 
 import com.axgrid.jdbc.rawsql.RawDAO;
-import com.axgrid.jdbc.rawsql.RawElementUtils;
 import com.axgrid.jdbc.rawsql.RawUtils;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethod;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethodParameter;
 import com.axgrid.jdbc.rawsql.processors.dto.RawDAOQueryMethod;
-import com.oracle.truffle.dsl.processor.java.ElementUtils;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -109,22 +106,18 @@ public class RawDAOsProcessor extends AbstractProcessor {
     }
 
     private RawDAOMethod getMethodDescription(Element methodElement, String method) {
+
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOMethod();
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
+        messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
         System.out.println("---- CREATE FIELDS FOR PROCESSORS  --- " + method);
         if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject)) {
-            System.out.println("---- RO FIELDS Name:" + methodDescription.getRawObjectElement().asType() + " --- " + RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()).getFields().values().size());
-            //DeclaredType declaredFieldType = (DeclaredType) methodDescription.getRawObjectElement().asType();
-
-            //TypeElement fieldTypeElement = ElementUtils.fromTypeMirror(methodDescription.getRawObjectElement().asType());
-            //TypeElement fieldTypeElement = (TypeElement) declaredFieldType.asElement();
-            Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType()); // RawElementUtils.getFromMirrorType(typeUtils(), methodDescription.getRawObjectElement().asType());
-            System.out.println("---- RO TYPE Name:" + fieldTypeElement.getSimpleName() + " ----");
+            Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType());
             methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(fieldTypeElement));
         }
         return methodDescription;
@@ -135,6 +128,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         var methodDescription = new RawDAOQueryMethod();
         var rawQuery = methodElement.getAnnotation(RawDAO.RawQuery.class);
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
+        messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());

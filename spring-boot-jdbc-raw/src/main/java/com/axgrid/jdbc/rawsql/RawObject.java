@@ -16,7 +16,6 @@ public @interface RawObject {
     boolean useFieldsOnly() default false;
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    //@Retention(RetentionPolicy.SOURCE)
     @interface Include {
         @AliasFor("fieldName")
         String value() default "";
@@ -31,11 +30,21 @@ public @interface RawObject {
     @interface JsonObject { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @interface EnumToInteger { }
+    @interface EnumToInteger {
+        String getter() default "getNumber";
+        String setter() default "setNumber";
+    }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
     @interface EnumToOrdinal { }
 
+    @Target({ElementType.FIELD, ElementType.METHOD})
+    @interface DateToString {
+        String format() default "yyyy-mm-dd hh:mm:ss";
+    }
+
+    @Target({ElementType.FIELD, ElementType.METHOD})
+    @interface DateToLong { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
     @interface Processor{

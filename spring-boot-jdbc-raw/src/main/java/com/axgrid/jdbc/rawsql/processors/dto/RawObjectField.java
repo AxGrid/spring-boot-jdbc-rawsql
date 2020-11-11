@@ -4,6 +4,8 @@ import com.axgrid.jdbc.rawsql.RawObject;
 import com.axgrid.jdbc.rawsql.RawUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -22,8 +24,20 @@ public class RawObjectField {
     boolean jsonObject = false;
 
     String valueProcessor = null;
+    final List<String> valueProcessorArguments = new ArrayList<>();
+
+    public List<String> getValueProcessorArguments() {
+        return valueProcessorArguments;
+    }
+
+    public boolean isGetter() { return getter; }
+
+    public void setGetter(boolean getter) {
+        this.getter = getter;
+    }
 
     public String getFromResultSet() {
+        if (type == null) throw new RuntimeException("RawSQL Type of null");
         return RawUtils.getFromResultSet(getFieldName(), type);
     }
 

@@ -1,2 +1,8 @@
-{{~#if setter}}res.{{methodName}}(resultSet{{fromResultSet}});
-    {{~else}}res.{{name}} = resultSet{{fromResultSet}};{{/if}}
+{{~#if setter~}}
+        res.{{methodName}}(resultSet{{fromResultSet}});
+{{~else~}}
+{{~#if field~}}
+        res.{{name}} = resultSet{{fromResultSet}};
+{{~/if~}}
+{{~/if~}}
+

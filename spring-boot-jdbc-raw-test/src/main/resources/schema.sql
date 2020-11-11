@@ -5,5 +5,8 @@ CREATE TABLE IF NOT EXISTS my_table(
     `enum1` varchar(100),
     `enum2` int,
     `data` longtext,
-    `dval` double
+    `dval` double,
+    `longDate` bigint,
+    `stringDate` varchar(100),
+    `date` datetime
 );
