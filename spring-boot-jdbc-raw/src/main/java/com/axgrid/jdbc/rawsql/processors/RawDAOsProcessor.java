@@ -131,12 +131,16 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setNullIfObjectEmpty(rawQuery.nullIfObjectEmpty());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+
         if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject))
             methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()));
 
         List<? extends TypeMirror> mapperTypes = RawUtils.getTypeMirrorFromAnnotationValue(rawQuery::mapper);
         if (mapperTypes != null && mapperTypes.size() > 0)
                 methodDescription.setMapperType(rawQuery.mapper()[0].getTypeName());
+
+        methodDescription.createResultProcessor(executableElement);
+
         return methodDescription;
     }
 

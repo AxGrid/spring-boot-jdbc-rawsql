@@ -30,6 +30,9 @@ public @interface RawObject {
     @interface JsonObject { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
+    @interface ProtoObject { }
+
+    @Target({ElementType.FIELD, ElementType.METHOD})
     @interface EnumToString {
         String getter() default "toString";
         String setter() default "valueOf";

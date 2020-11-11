@@ -16,6 +16,9 @@ public @interface RawParam {
     @interface JsonObject { }
 
     @Target({ElementType.PARAMETER})
+    @interface ProtoObject { }
+
+    @Target({ElementType.PARAMETER})
     @interface EnumToString {
         String getter() default "toString";
         String setter() default "valueOf";

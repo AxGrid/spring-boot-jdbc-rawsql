@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -103,6 +104,29 @@ public class TestRaw {
         res = dao.getByEnum2(MySimpleEnum.No);
         Assert.assertNotEquals(res.size(), 0);
         Assert.assertTrue(res.stream().allMatch(item -> item.getEnumInt() == MySimpleEnum.No));
-
     }
+
+    @Test
+    public void testQuerySimpleData() {
+        MyRawObject o = new MyRawObject();
+        o.setAge(18);
+        o.setEnumInt(MySimpleEnum.Yes);
+        o.setIncludedJsonObject(new MyIncludedJsonObject("help"));
+
+        var d = new Date();
+        o.setTime(d);
+        long id = dao.createObject(o);
+
+        int age = dao.getAgeById(id);
+        Assert.assertEquals(18, age);
+        Date date = dao.getDateById(id);
+        Assert.assertNotNull(date);
+        Assert.assertEquals(Math.round(date.getTime()/1000.0), Math.round(d.getTime() / 1000.0));
+
+        MyIncludedJsonObject obj = dao.getObjectById(id);
+        Assert.assertNotNull(obj);
+        Assert.assertEquals(obj.getTextField(), "help");
+    }
+
+
 }

@@ -1,9 +1,6 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
-import com.axgrid.jdbc.rawsql.RawDAO;
-import com.axgrid.jdbc.rawsql.RawObject;
-import com.axgrid.jdbc.rawsql.RawParam;
-import com.axgrid.jdbc.rawsql.RawUtils;
+import com.axgrid.jdbc.rawsql.*;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -24,6 +21,47 @@ public class RawDAOMethod {
 
     List<RawDAOMethodParameter> parameters = new ArrayList<>();
 
+    String resultProcessor = null;
+    final List<String> resultProcessorArguments = new ArrayList<>();
+
+
+
+    public void createResultProcessor(ExecutableElement executableElement) {
+
+        if (executableElement.getAnnotation(RawResult.OrdinalToEnum.class)!=null)
+            resultProcessor = "enumToOrdinal";
+        var integerToEnum = executableElement.getAnnotation(RawResult.IntegerToEnum.class);
+        if (integerToEnum!=null) {
+            resultProcessor = "enumToInt";
+            resultProcessorArguments.add(integerToEnum.setter());
+        }
+        var stringToEnum = executableElement.getAnnotation(RawResult.StringToEnum.class);
+        if (stringToEnum!=null) {
+            resultProcessor = "enumToString";
+            resultProcessorArguments.add(stringToEnum.setter());
+        }
+
+        if (executableElement.getAnnotation(RawResult.LongToDate.class)!=null)
+            resultProcessor = "dateToLong";
+
+        var stringToDate = executableElement.getAnnotation(RawResult.StringToDate.class);
+        if (stringToDate!=null) {
+            resultProcessor = "dateToString";
+            resultProcessorArguments.add(stringToDate.format());
+        }
+
+        var processor = executableElement.getAnnotation(RawResult.Processor.class);
+        if (processor != null) {
+            resultProcessor = processor.value() + processor.name();
+            resultProcessorArguments.addAll(Arrays.asList(processor.params()));
+        }
+
+        if (executableElement.getAnnotation(RawResult.ProtoObject.class) != null)
+            resultProcessor =  "proto";
+
+        if (executableElement.getAnnotation(RawResult.JsonObject.class) != null)
+            resultProcessor =  "json";
+    }
 
     public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement) {
         List<RawDAOMethodParameter> res = new ArrayList<>();
@@ -37,6 +75,9 @@ public class RawDAOMethod {
 
             if (item.getAnnotation(RawParam.JsonObject.class) != null)
                 parameter.setValueProcessor("json");
+
+            if (item.getAnnotation(RawParam.ProtoObject.class) != null)
+                parameter.setValueProcessor("proto");
 
             var enumToInteger = item.getAnnotation(RawParam.EnumToInteger.class);
             if (enumToInteger != null) {
@@ -72,10 +113,21 @@ public class RawDAOMethod {
                 parameter.getValueProcessorArguments().addAll(Arrays.asList(processor.params()));
             }
 
-
             res.add(parameter);
         }
         return res;
+    }
+
+    public String getResultProcessor() {
+        return resultProcessor;
+    }
+
+    public void setResultProcessor(String resultProcessor) {
+        this.resultProcessor = resultProcessor;
+    }
+
+    public List<String> getResultProcessorArguments() {
+        return resultProcessorArguments;
     }
 
     public int  getProcessorFieldsSize() {

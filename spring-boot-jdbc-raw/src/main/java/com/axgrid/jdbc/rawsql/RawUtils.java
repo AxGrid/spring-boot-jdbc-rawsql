@@ -65,6 +65,17 @@ public final class RawUtils {
         return typeName.contains("List<");
     }
 
+
+    public static boolean isDirectSQLClass(String typeName) {
+        switch (typeName){
+            default:
+                return false;
+            case "java.util.Date":
+            case "java.lang.String":
+                return true;
+        }
+    }
+
     public static String getTypeDefaultValue(String typeName) {
         switch (typeName) {
             default:

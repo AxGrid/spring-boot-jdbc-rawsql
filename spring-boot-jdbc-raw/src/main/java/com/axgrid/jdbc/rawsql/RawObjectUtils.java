@@ -1,5 +1,6 @@
 package com.axgrid.jdbc.rawsql;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -7,11 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 
 public final class RawObjectUtils {
-    final static ObjectMapper om = new ObjectMapper();
+    final static ObjectMapper om = new ObjectMapper()
+            .configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true);
 
     final static Logger logger = Logger.getLogger("RawSQL");
 
@@ -26,12 +30,22 @@ public final class RawObjectUtils {
 
     public static String toJson(Object o) {
         try {
+            om.readValue("", String.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        try {
             if (o == null) return null;
             return om.writeValueAsString(o);
         }catch (JsonProcessingException e) {
             logger.warning("RawSQL error processing json object. " + e.getMessage());
             return null;
         }
+    }
+
+    public static <T, R> R executeOrNull(T value, Function<T, R> func) {
+        if (value == null) return null;
+        return func.apply(value);
     }
 
 }

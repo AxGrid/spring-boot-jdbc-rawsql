@@ -11,6 +11,9 @@
 {{~#equals valueProcessor 'dateToString' ~}}
 RawObjectUtils.dateFromString("{{valueProcessorArguments.[0]}}", resultSet.getString("{{fieldName}}"))
 {{~/equals}}
+{{~#equals valueProcessor 'dateToLong' ~}}
+new Date(resultSet.getLong("{{fieldName}}"))
+{{~/equals}}
 {{~else~}}
 resultSet{{fromResultSet}}
 {{~/if~}}
