@@ -36,7 +36,7 @@ public class MyRawObject {
     @RawObject.DateToString
     public Date getStringDate() { return time; }
 
-    public void setStringDate(String date) {
+    public void setStringDate(Date date) {
         log.debug("Try insert string date is {}", date);
     }
 

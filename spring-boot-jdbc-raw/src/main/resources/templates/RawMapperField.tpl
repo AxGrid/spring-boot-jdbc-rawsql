@@ -1,8 +1,8 @@
 {{~#if setter~}}
-        res.{{methodName}}(resultSet{{fromResultSet}});
+        res.{{methodName}}({{>RawMapperProcessor}});
 {{~else~}}
 {{~#if field~}}
-        res.{{name}} = resultSet{{fromResultSet}};
+        res.{{name}} = {{>RawMapperProcessor}};
 {{~/if~}}
 {{~/if~}}
 

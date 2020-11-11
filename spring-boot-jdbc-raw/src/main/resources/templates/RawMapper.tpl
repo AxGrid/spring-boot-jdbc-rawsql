@@ -2,6 +2,7 @@
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import com.axgrid.jdbc.rawsql.RawObjectUtils;
 {{#if fields.jsonObjects}}
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
