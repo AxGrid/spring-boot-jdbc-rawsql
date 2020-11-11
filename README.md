@@ -155,11 +155,19 @@ RawParam attributes
 
 **@RawParam.EnumToString** - set parameter for cast Enum to String
 
+ * getter - set method for get String value (default toString) 
+ * setter - set static-method for set String value (default valueOf)
+
 **@RawParam.EnumToInteger** - set parameter for cast Enum to Integer
+
+ * getter - set method for get String value (default getNumber) 
+ * setter - set static-method for set String value (default forNumber)
 
 **@RawParam.EnumToOrdinal** - set parameter for cast Enum to Ordinal-Integer
 
 **@RawParam.DateToString** - set parameter for cast Date to String
+ 
+ * format - set format (default "yyyy-MM-dd hh:mm:ss")
 
 **@RawParam.DateToLong** - set parameter for cast Date to Long
 
