@@ -1,4 +1,7 @@
 {{~#if valueProcessor ~}}
+{{~#equals valueProcessor 'enumToString' ~}}
+{{type}}.valuesOf(resultSet.getString("{{fieldName}}"))
+{{~/equals}}
 {{~#equals valueProcessor 'enumToOrdinal' ~}}
 {{type}}.values()[resultSet.getInt("{{fieldName}}")]
 {{~/equals}}

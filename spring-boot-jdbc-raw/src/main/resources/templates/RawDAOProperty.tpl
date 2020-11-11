@@ -13,6 +13,9 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
                         value = null;
                     }
                 {{/equals}}
+                {{~#equals valueProcessor 'enumToString'}}
+                    value = value.toString();
+                {{/equals}}
                 {{~#equals valueProcessor 'enumToInt'}}
                     value = (({{type}})value).{{valueProcessorArguments.[0]}}();
                 {{/equals}}
