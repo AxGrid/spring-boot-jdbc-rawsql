@@ -1,12 +1,12 @@
 {{~#if valueProcessor ~}}
 {{~#equals valueProcessor 'enumToString' ~}}
-{{type}}.valueOf(resultSet.getString("{{fieldName}}"))
+{{type}}.{{valueProcessorArguments.[1]}}(resultSet.getString("{{fieldName}}"))
 {{~/equals}}
 {{~#equals valueProcessor 'enumToOrdinal' ~}}
 {{type}}.values()[resultSet.getInt("{{fieldName}}")]
 {{~/equals}}
 {{~#equals valueProcessor 'enumToInt' ~}}
-{{valueProcessorArguments.[1]}}(resultSet.getInt("{{fieldName}}"))
+{{type}}.{{valueProcessorArguments.[1]}}(resultSet.getInt("{{fieldName}}"))
 {{~/equals}}
 {{~#equals valueProcessor 'dateToString' ~}}
 RawObjectUtils.dateFromString("{{valueProcessorArguments.[0]}}", resultSet.getString("{{fieldName}}"))

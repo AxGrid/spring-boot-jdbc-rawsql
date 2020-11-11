@@ -1,11 +1,14 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
+import com.axgrid.jdbc.rawsql.RawObject;
+import com.axgrid.jdbc.rawsql.RawParam;
 import com.axgrid.jdbc.rawsql.RawUtils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +33,46 @@ public class RawDAOMethod {
             parameter.setName(item.getSimpleName().toString());
             parameter.setType(item.asType().toString());
             parameter.setRawParamObject(item.getAnnotation(RawDAO.RawParamObject.class));
-            parameter.setRawParam(item.getAnnotation(RawDAO.RawParam.class));
+            parameter.setRawParam(item.getAnnotation(RawParam.class));
+
+            if (item.getAnnotation(RawParam.JsonObject.class) != null)
+                parameter.setValueProcessor("json");
+
+            var enumToInteger = item.getAnnotation(RawParam.EnumToInteger.class);
+            if (enumToInteger != null) {
+                parameter.setValueProcessor("enumToInt");
+                parameter.getValueProcessorArguments().add(enumToInteger.getter());
+                parameter.getValueProcessorArguments().add(enumToInteger.setter());
+            }
+
+            var enumToString = item.getAnnotation(RawParam.EnumToString.class);
+            if (enumToString != null) {
+                parameter.setValueProcessor("enumToString");
+                parameter.getValueProcessorArguments().add(enumToString.getter());
+                parameter.getValueProcessorArguments().add(enumToString.setter());
+            }
+
+            if (item.getAnnotation(RawParam.EnumToOrdinal.class) != null) {
+                parameter.setValueProcessor("enumToOrdinal");
+            }
+
+            if (item.getAnnotation(RawParam.DateToLong.class) != null) {
+                parameter.setValueProcessor("dateToLong");
+            }
+
+            var dateToString = item.getAnnotation(RawParam.DateToString.class);
+            if (dateToString != null) {
+                parameter.setValueProcessor("dateToString");
+                parameter.getValueProcessorArguments().add(dateToString.format());
+            }
+
+            var processor = item.getAnnotation(RawParam.Processor.class);
+            if (processor != null) {
+                parameter.setValueProcessor(processor.value() + processor.name());
+                parameter.getValueProcessorArguments().addAll(Arrays.asList(processor.params()));
+            }
+
+
             res.add(parameter);
         }
         return res;

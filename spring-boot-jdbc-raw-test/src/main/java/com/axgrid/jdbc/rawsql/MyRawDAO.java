@@ -21,7 +21,7 @@ public interface MyRawDAO {
     long createObject(@RawDAO.RawParamObject MyRawObject obj);
 
     @RawDAO.RawQuery("select * from my_table where id=:id")
-    MyRawObject getById(@RawDAO.RawParam("id") long id);
+    MyRawObject getById(@RawParam("id") long id);
 
     @RawDAO.RawQuery("select age from my_table where age=:age")
     long getAgeById(long id);
@@ -29,8 +29,8 @@ public interface MyRawDAO {
     @RawDAO.RawQuery("select * from my_table where age>:age")
     List<MyRawObject> getByAge(int age);
 
-    @RawDAO.RawQuery("select * from my_table where id=:id and enum2=:e")
-    List<MyRawObject> getByAgeAndEnum2(long id, @RawDAO.RawParam MySimpleEnum e);
+    @RawDAO.RawQuery("select * from my_table where enum2=:e")
+    List<MyRawObject> getByEnum2(@RawParam.EnumToOrdinal MySimpleEnum e);
 
 
 }

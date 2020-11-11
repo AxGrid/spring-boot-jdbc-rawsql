@@ -51,7 +51,7 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
                     value = (({{type}})value).toByteArray();
                 {{/equals}}
                 {{~#equals valueProcessor 'enumToString'}}
-                    value = value.toString();
+                    value = (({{type}})value).{{valueProcessorArguments.[0]}}();
                 {{/equals}}
                 {{~#equals valueProcessor 'enumToInt'}}
                     value = (({{type}})value).{{valueProcessorArguments.[0]}}();
@@ -67,10 +67,6 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
                 {{/equals}}
                 }
                 {{/each}}
-
-                if (value instanceof java.util.Date) {
-                    value = new java.sql.Time(((java.util.Date)value).getTime());
-                }
 
                 if (value instanceof Enum) {
                     value = value.toString();

@@ -1,19 +1,36 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
+import com.axgrid.jdbc.rawsql.RawParam;
 
 import javax.lang.model.element.Element;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RawDAOMethodParameter {
     String name;
     String type;
     Element element;
-    RawDAO.RawParam rawParam;
+    RawParam rawParam;
     RawDAO.RawParamObject rawParamObject;
+    String valueProcessor = null;
+    final List<String> valueProcessorArguments = new ArrayList<>();
 
     @Override
     public String toString() {
         return String.format("%s %s", type, name);
+    }
+
+    public String getValueProcessor() {
+        return valueProcessor;
+    }
+
+    public void setValueProcessor(String valueProcessor) {
+        this.valueProcessor = valueProcessor;
+    }
+
+    public List<String> getValueProcessorArguments() {
+        return valueProcessorArguments;
     }
 
     public Element getElement() {
@@ -44,11 +61,11 @@ public class RawDAOMethodParameter {
         this.type = type;
     }
 
-    public RawDAO.RawParam getRawParam() {
+    public RawParam getRawParam() {
         return rawParam;
     }
 
-    public void setRawParam(RawDAO.RawParam rawParam) {
+    public void setRawParam(RawParam rawParam) {
         this.rawParam = rawParam;
     }
 

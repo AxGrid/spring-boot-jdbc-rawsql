@@ -30,12 +30,15 @@ public @interface RawObject {
     @interface JsonObject { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @interface EnumToString { }
+    @interface EnumToString {
+        String getter() default "toString";
+        String setter() default "valueOf";
+    }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
     @interface EnumToInteger {
         String getter() default "getNumber";
-        String setter() default "setNumber";
+        String setter() default "forNumber";
     }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
@@ -43,7 +46,7 @@ public @interface RawObject {
 
     @Target({ElementType.FIELD, ElementType.METHOD})
     @interface DateToString {
-        String format() default "yyyy-mm-dd hh:mm:ss";
+        String format() default "yyyy-MM-dd hh:mm:ss";
     }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
@@ -55,6 +58,8 @@ public @interface RawObject {
         String value() default "";
         @AliasFor("value")
         String name() default "";
+
+        String[] params() default {};
     }
 
 }

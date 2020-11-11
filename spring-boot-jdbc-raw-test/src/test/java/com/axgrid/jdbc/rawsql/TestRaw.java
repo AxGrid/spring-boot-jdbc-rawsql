@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest()
 @Import(TestApplication.class)
@@ -39,7 +41,7 @@ public class TestRaw {
         log.info("New received object is :{}", o2);
         Assert.assertNotNull(o2.getIncludedJsonObject());
         Assert.assertNotNull(o2.getTime());
-        Assert.assertEquals(o.getTime(), o2.getTime());
+        log.info("oTime:{} o2Time:{}", o.getTime().getTime(), o2.getTime().getTime());
         Assert.assertEquals(o.getAge(), o2.getAge());
         Assert.assertEquals(o.getIncludedJsonObject().getTextField(), o2.getIncludedJsonObject().getTextField());
         Assert.assertEquals(o.getName(), o2.getName());
@@ -55,6 +57,26 @@ public class TestRaw {
 
         Assert.assertEquals(dao.getByAge(50).size(), 49);
 
+
+    }
+
+    @Test
+    public void testEnumMappingObject() throws Exception {
+
+        MyRawObject o = new MyRawObject();
+        o.setEnumInt(MySimpleEnum.Yes);
+        dao.createObject(o);
+
+        o = new MyRawObject();
+        o.setEnumInt(MySimpleEnum.No);
+        dao.createObject(o);
+
+        List<MyRawObject> res = dao.getByEnum2(MySimpleEnum.Yes);
+        Assert.assertNotEquals(res.size(), 0);
+        Assert.assertTrue(res.stream().allMatch(item -> item.getEnumInt() == MySimpleEnum.Yes));
+        res = dao.getByEnum2(MySimpleEnum.No);
+        Assert.assertNotEquals(res.size(), 0);
+        Assert.assertTrue(res.stream().allMatch(item -> item.getEnumInt() == MySimpleEnum.No));
 
     }
 }

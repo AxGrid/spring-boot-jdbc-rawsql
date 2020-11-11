@@ -12,6 +12,7 @@ import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.Set;
 
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawObject")
@@ -122,9 +123,11 @@ public class RawObjectsProcessor extends AbstractProcessor {
             field.getValueProcessorArguments().add(enumToInteger.setter());
         }
 
-
-        if (element.getAnnotation(RawObject.EnumToString.class) != null) {
+        var enumToString = element.getAnnotation(RawObject.EnumToString.class);
+        if (enumToString != null) {
             field.setValueProcessor("enumToString");
+            field.getValueProcessorArguments().add(enumToString.getter());
+            field.getValueProcessorArguments().add(enumToString.setter());
         }
 
         if (element.getAnnotation(RawObject.EnumToOrdinal.class) != null) {
@@ -143,6 +146,7 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
         if (processor != null) {
             field.setValueProcessor(processor.value() + processor.name());
+            field.getValueProcessorArguments().addAll(Arrays.asList(processor.params()));
         }
     }
 

@@ -38,13 +38,7 @@ public @interface RawDAO {
         String query() default "";
     }
 
-    @Target(ElementType.PARAMETER)
-    @interface RawParam {
-        @AliasFor("name")
-        String value() default "";
-        @AliasFor("value")
-        String name() default "";
-    }
+
 
     @Target(ElementType.PARAMETER)
     @interface RawParamObject {
