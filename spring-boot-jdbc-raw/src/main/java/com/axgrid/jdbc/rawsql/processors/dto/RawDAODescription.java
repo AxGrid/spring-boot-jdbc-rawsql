@@ -1,7 +1,6 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
-import com.axgrid.jdbc.rawsql.RawObject;
 
 import java.util.ArrayList;
 import java.util.List;

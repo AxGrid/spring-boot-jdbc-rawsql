@@ -1,6 +1,5 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
-import com.axgrid.jdbc.rawsql.RawObject;
 import com.axgrid.jdbc.rawsql.RawUtils;
 import org.apache.commons.lang3.StringUtils;
 

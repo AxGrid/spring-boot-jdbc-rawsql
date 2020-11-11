@@ -26,15 +26,16 @@ public class MyRawObject {
     MyIncludedJsonObject includedJsonObject;
 
 
-    Date time = new Date();
+//    @RawObject.Exclude
+//    Date time = new Date();
 
     @RawObject.Include("longDate")
     @RawObject.DateToLong
-    public Date getLongDate() { return time; }
+    public Date getLongDate() { return new Date(); }
 
     @RawObject.Include("stringDate")
     @RawObject.DateToString
-    public Date getStringDate() { return time; }
+    public Date getStringDate() { return new Date(); }
 
     public void setStringDate(Date date) {
         log.debug("Try insert string date is {}", date);
