@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS my_table(
     `data`  longtext,
     `dval`  double,
     `longDate` bigint,
-    `stringDate` varchar(100)
+    `stringDate` varchar(100),
+    `date` datetime
 );
 
 /*

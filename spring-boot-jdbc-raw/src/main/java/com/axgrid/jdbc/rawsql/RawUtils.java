@@ -195,6 +195,8 @@ public final class RawUtils {
                 return String.format(".getFloat(\"%s\")", field);
             case "java.lang.String":
                 return String.format(".getString(\"%s\")", field);
+            case "java.util.Date":
+                return String.format(".getTimestamp(\"%s\")", field);
         }
     }
 

@@ -76,7 +76,7 @@ var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
                     value = value.toString();
                 }
 
-                log.warn("Process field {} = {} ({})", paramName, value, value.getClass().getName());
+                if (log.isTraceEnabled()) log.trace("Process field {} = {} ({})", paramName, value, value.getClass().getName());
                 return value;
             }
         };

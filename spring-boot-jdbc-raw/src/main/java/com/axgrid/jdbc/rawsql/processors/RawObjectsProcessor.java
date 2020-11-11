@@ -122,6 +122,11 @@ public class RawObjectsProcessor extends AbstractProcessor {
             field.getValueProcessorArguments().add(enumToInteger.setter());
         }
 
+
+        if (element.getAnnotation(RawObject.EnumToString.class) != null) {
+            field.setValueProcessor("enumToString");
+        }
+
         if (element.getAnnotation(RawObject.EnumToOrdinal.class) != null) {
             field.setValueProcessor("enumToOrdinal");
         }

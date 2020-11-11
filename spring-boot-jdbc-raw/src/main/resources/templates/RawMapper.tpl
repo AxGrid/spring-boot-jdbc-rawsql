@@ -17,7 +17,7 @@ public class {{className}} implements RowMapper<{{objectName}}> {
     @Override
     public {{objectName}} mapRow(ResultSet resultSet, int i) throws SQLException {
         {{objectName}} res = new {{objectName}}();
-        {{~#each fields}}
+        {{~#each nonExcludeFields}}
         {{~#if jsonObject}}
         {{>RawMapperJsonObject this ~}}
         {{~else}}

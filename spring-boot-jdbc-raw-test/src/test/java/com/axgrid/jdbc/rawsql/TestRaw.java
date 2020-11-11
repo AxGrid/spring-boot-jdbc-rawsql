@@ -35,8 +35,8 @@ public class TestRaw {
         long id = dao.createObject(o);
         Assert.assertNotEquals(id, 0);
         log.info("New object ID is {}", id);
-//        var o2 = dao.getById(id);
-//        log.info("New received object is :{}", o2);
+        var o2 = dao.getById(id);
+        log.info("New received object is :{}", o2);
 
     }
 }

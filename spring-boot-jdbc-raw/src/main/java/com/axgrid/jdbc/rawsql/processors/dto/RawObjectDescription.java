@@ -4,6 +4,7 @@ import com.axgrid.jdbc.rawsql.RawObject;
 import com.axgrid.jdbc.rawsql.RawUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public class RawObjectDescription {
     private String packageName;
     private String objectName;
     private RawObject rawObject;
-
+    private HashSet<String> excludedFields = new HashSet<>();
     public String getClassName() { return objectName + "RawObjectMapper"; }
 
     final RawObjectFieldList fields = new RawObjectFieldList();
@@ -51,6 +52,10 @@ public class RawObjectDescription {
 
     public RawObjectFieldList getFields() {
         return fields;
+    }
+
+    public List<RawObjectField> getNonExcludeFields() {
+        return getFieldsList().stream().filter(item -> !item.exclude && !excludedFields.contains(item.name)).collect(Collectors.toList());
     }
 
     @Override
