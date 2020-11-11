@@ -33,7 +33,6 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        System.out.println("--- PROCESS MAPPER !!!!!! ---");
         for (TypeElement annotation : annotations) {
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
                 try {
@@ -77,7 +76,6 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
     private static void createFields(Element element, RawObjectFieldList list) {
         String name = element.getSimpleName().toString();
-        System.out.println("Process element "+name);
         var include = element.getAnnotation(RawObject.Include.class);
         var exclude = element.getAnnotation(RawObject.Exclude.class);
         var jsonObject  = element.getAnnotation(RawObject.JsonObject.class);
@@ -99,8 +97,6 @@ public class RawObjectsProcessor extends AbstractProcessor {
                 field.setType(elementType.asType().toString());
                 field.setSetter(true);
             } else {
-
-                System.out.printf("Process setter form %s, %s %s\n", name, RawUtils.isSetter(name), executableElement.getParameters().size());
                 return;
             }
         } else {
@@ -143,9 +139,6 @@ public class RawObjectsProcessor extends AbstractProcessor {
         if (processor != null) {
             field.setValueProcessor(processor.value() + processor.name());
         }
-
-        System.out.println("   valueProcessor:"+field.getValueProcessor());
-
     }
 
 

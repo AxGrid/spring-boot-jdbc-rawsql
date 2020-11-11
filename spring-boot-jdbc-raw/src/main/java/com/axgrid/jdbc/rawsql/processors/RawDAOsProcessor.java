@@ -53,8 +53,6 @@ public class RawDAOsProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         this.roundEnv = roundEnv;
-        System.out.println("--- PROCESS DAO !!!!!! --- " + annotations.size());
-
         for (TypeElement annotation : annotations) {
             messager.printMessage(Diagnostic.Kind.NOTE, "Raw DAO process annotation: " + annotation.getSimpleName());
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
@@ -115,7 +113,6 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
-        System.out.println("---- CREATE FIELDS FOR PROCESSORS  --- " + method);
         if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject)) {
             Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType());
             methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(fieldTypeElement));

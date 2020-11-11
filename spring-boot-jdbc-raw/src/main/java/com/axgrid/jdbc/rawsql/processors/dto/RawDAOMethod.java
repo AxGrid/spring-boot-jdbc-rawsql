@@ -56,7 +56,6 @@ public class RawDAOMethod {
                 .stream()
                 .filter(item -> item.getValueProcessor() != null && !item.getValueProcessor().equals(""))
                 .collect(Collectors.toList());
-        System.out.println("---- GET PROCESSOR FIELDS " +name+ " ---- " + pf.size() + " " + rawObject.getFieldsList().size());
         return pf;
     }
 
@@ -71,7 +70,6 @@ public class RawDAOMethod {
     public Element getRawObjectElement() {
         var param = this.parameters.stream().filter(RawDAOMethodParameter::isRawParamObject).findFirst().orElse(null);
         if (param == null) return null;
-        System.out.println("Get raw OBJECT Element: Name:" + param.name +" Type:" + param.type+" Element:"+ param.element);
         return param.element;
     }
 
