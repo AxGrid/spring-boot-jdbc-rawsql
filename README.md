@@ -55,8 +55,10 @@ public class MyRawObject {
 ```java
 
 // Create object and return ID
-@RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
-        "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
+@RawDAO.RawInsert("insert into my_table " +
+ "(`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
+ "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, " +
+ ":longDate, :stringDate, :time)")
 long createObject(@RawDAO.RawParamObject MyRawObject obj);
 
 // Update age in object
