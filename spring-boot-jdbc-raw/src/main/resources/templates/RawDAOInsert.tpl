@@ -3,9 +3,7 @@
     {{~#if rawObjectName }}
         {{>RawDAOProperty this}}
     {{~else}}
-        Map parameters = new HashMap();
-        {{~#each parameters}}parameters.put("{{name}}", {{name}});
-        {{~/each}}
+        {{>RawDAOPropertyMap this}}
     {{~/if}}
     {{~#if void}}jdbcTemplate.update("{{query}}", parameters);
     {{~else}}

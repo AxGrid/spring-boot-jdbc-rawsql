@@ -1,27 +1,27 @@
-spring:
-  application:
-    name: RawMapper (Dev)
-  datasource:
-    platform: h2
-    url: jdbc:h2:mem:testdb;mode=MySQL
-
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-    initialization-mode: always
-    hikari:
-      connection-test-query: SELECT 1
-
 #spring:
 #  application:
-#    name: RawMapper (Stage)
+#    name: RawMapper (Dev)
 #  datasource:
-#    url: jdbc:mysql://127.0.0.1:3306/my_raw_database?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-#    username: ${mysql_user:root}
-#    password: ${mysql_password:}
-#    platform: mysql
-#    driverClassName: com.mysql.cj.jdbc.Driver
+#    platform: h2
+#    url: jdbc:h2:mem:testdb;mode=MySQL
+#
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password: ''
 #    initialization-mode: always
 #    hikari:
-#      idle-timeout: 10000
-#      maximumPoolSize: 50
+#      connection-test-query: SELECT 1
+
+spring:
+  application:
+    name: RawMapper (Stage)
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/my_raw_database?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: ${mysql_user:root}
+    password: ${mysql_password:}
+    platform: mysql
+    driverClassName: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+    hikari:
+      idle-timeout: 10000
+      maximumPoolSize: 50

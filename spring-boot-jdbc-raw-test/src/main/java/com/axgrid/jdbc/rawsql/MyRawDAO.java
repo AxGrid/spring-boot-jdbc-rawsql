@@ -26,13 +26,11 @@ public interface MyRawDAO {
     @RawDAO.RawQuery("select age from my_table where age=:age")
     long getAgeById(long id);
 
-    @RawDAO.RawQuery("select * from my_table where id=:id")
-    List<MyRawObject> getByAge(long id);
+    @RawDAO.RawQuery("select * from my_table where age>:age")
+    List<MyRawObject> getByAge(int age);
 
     @RawDAO.RawQuery("select * from my_table where id=:id and enum2=:e")
-    List<MyRawObject> getByAgeAndEnum2(long id, MySimpleEnum e);
+    List<MyRawObject> getByAgeAndEnum2(long id, @RawDAO.RawParam MySimpleEnum e);
 
-    @RawDAO.RawQuery("select * from my_table where id=:id and enum1=:e")
-    List<MyRawObject> getByAgeAndEnum1(long id, MySimpleEnum e);
 
 }

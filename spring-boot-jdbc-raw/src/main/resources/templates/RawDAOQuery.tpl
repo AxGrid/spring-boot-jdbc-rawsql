@@ -1,11 +1,9 @@
 @Override
     public {{returnType}} {{name}}({{flatParameters}}) {
     {{~#if rawObjectName }}
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource({{rawObjectName}});
+        {{>RawDAOProperty this}}
     {{~else}}
-        Map parameters = new HashMap();
-        {{~#each parameters}}parameters.put("{{name}}", {{name}});
-        {{~/each}}
+        {{>RawDAOPropertyMap this}}
     {{~/if}}
     {{~#if list }}
         return jdbcTemplate.query("{{query}}", parameters, {{mapper}});

@@ -37,6 +37,24 @@ public class TestRaw {
         log.info("New object ID is {}", id);
         var o2 = dao.getById(id);
         log.info("New received object is :{}", o2);
+        Assert.assertNotNull(o2.getIncludedJsonObject());
+        Assert.assertNotNull(o2.getTime());
+        Assert.assertEquals(o.getTime(), o2.getTime());
+        Assert.assertEquals(o.getAge(), o2.getAge());
+        Assert.assertEquals(o.getIncludedJsonObject().getTextField(), o2.getIncludedJsonObject().getTextField());
+        Assert.assertEquals(o.getName(), o2.getName());
+    }
+
+    @Test
+    public void testListObject() throws Exception {
+        for(int i=0;i<100;i++) {
+            var o = new MyRawObject();
+            o.setAge(i);
+            dao.createObject(o);
+        }
+
+        Assert.assertEquals(dao.getByAge(50).size(), 49);
+
 
     }
 }

@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS my_table;
 CREATE TABLE IF NOT EXISTS my_table(
     `id` bigint primary key auto_increment not null,
     `name`  varchar(150),
