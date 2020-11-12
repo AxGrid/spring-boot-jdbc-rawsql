@@ -35,6 +35,10 @@ public class RawDAOQueryMethod extends RawDAOMethod {
         return RawUtils.isList(this.returnType);
     }
 
+    public boolean isOptional() {
+        return RawUtils.isOptional(this.returnType);
+    }
+
     public String getListGenericType() {
         return RawUtils.getGenericTypeName(this.returnType);
     }

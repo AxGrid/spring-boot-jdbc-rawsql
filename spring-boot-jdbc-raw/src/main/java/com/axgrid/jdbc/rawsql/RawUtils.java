@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public final class RawUtils {
-    static Pattern listPattern =  Pattern.compile("^(.*)<(.*)>$");
+    static Pattern genericPattern =  Pattern.compile("^(.*)<(.*)>$");
     static Pattern setterPattern =  Pattern.compile("^set(\\w+)$");
     static Pattern getterPattern =  Pattern.compile("^get(\\w+)$");
 
@@ -63,6 +63,9 @@ public final class RawUtils {
 
     public static boolean isList(String typeName) {
         return typeName.contains("List<");
+    }
+    public static boolean isOptional(String typeName) {
+        return typeName.contains("Optional<");
     }
 
 
@@ -159,10 +162,11 @@ public final class RawUtils {
     }
 
     public static String getGenericTypeName(String listType) {
-        var matcher = listPattern.matcher(listType);
+        var matcher = genericPattern.matcher(listType);
         if (matcher.find()) return matcher.group(2);
         return "";
     }
+
 
     public static boolean isSetter(String name) {
         return setterPattern.matcher(name).find();

@@ -2,6 +2,7 @@ package com.axgrid.jdbc.rawsql;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RawDAO
 public interface MyRawDAO {
@@ -17,6 +18,8 @@ public interface MyRawDAO {
             "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
     MyRawObject createObject2(@RawParam.RawParamObject MyRawObject obj);
 
+    @RawDAO.RawQuery("select * from my_table where id=:id")
+    Optional<MyRawObject> getOptionalById(long id);
 
     @RawDAO.RawQuery("select * from my_table where id=:id")
     MyRawObject getById(@RawParam("id") long id);

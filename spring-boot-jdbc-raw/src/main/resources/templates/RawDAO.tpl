@@ -1,8 +1,7 @@
 {{#if packageName}}package {{packageName}};{{/if}}
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.NotImplementedException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.beans.factory.annotation.Autowired;
