@@ -27,7 +27,7 @@ public @interface RawDAO {
         @AliasFor("value")
         String query() default "";
         boolean nullIfObjectEmpty() default true;
-        Class<RowMapper<?>>[] mapper() default {};
+        Class<? extends RowMapper<?>>[] mapper() default {};
     }
 
     @Target(ElementType.METHOD)
