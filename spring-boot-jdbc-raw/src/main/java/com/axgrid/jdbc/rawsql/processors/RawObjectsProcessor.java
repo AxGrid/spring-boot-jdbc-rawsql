@@ -76,12 +76,15 @@ public class RawObjectsProcessor extends AbstractProcessor {
     }
 
     private static void createFields(Element element, RawObjectFieldList list) {
+        if (element.getKind().isClass()) return;
         String name = element.getSimpleName().toString();
         var include = element.getAnnotation(RawObject.Include.class);
         var exclude = element.getAnnotation(RawObject.Exclude.class);
         var jsonObject  = element.getAnnotation(RawObject.JsonObject.class);
         var enumToInteger  = element.getAnnotation(RawObject.EnumToInteger.class);
         var processor  = element.getAnnotation(RawObject.Processor.class);
+
+
 
         RawObjectField field;
         if (!element.getKind().isField()) { // Method

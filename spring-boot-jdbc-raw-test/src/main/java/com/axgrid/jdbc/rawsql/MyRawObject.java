@@ -1,18 +1,32 @@
 package com.axgrid.jdbc.rawsql;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import com.axgrid.proto.AxPPlatform;
+import lombok.NoArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 
+import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @RawObject
-public class MyRawObject {
+public class MyRawObject implements Serializable {
     Long id;
     String name;
     int age;
+
+    public String getName() {
+        if (name == null && id != null) return String.format("Player%d", (id + 10000));
+        return name;
+    }
 
     @RawObject.Include("enum1")
     @RawObject.EnumToString
@@ -40,8 +54,36 @@ public class MyRawObject {
     public void setStringDate(Date date) {
     }
 
+    @RawObject.EnumToString
+    AxPPlatform platform = AxPPlatform.Linux;
+
+    @JsonIgnore
+    @RawObject.Include("platform_int")
+    @RawObject.EnumToInteger
+    AxPPlatform platformInt = AxPPlatform.Windows;
+
     double dval = 5.3;
 
+
+    @JsonIgnore
     @RawObject.Exclude
     int excludeField = 15;
+
+    @RawObject.Exclude
+    public boolean isVip() {
+        return dval > new Date().getTime();
+    }
+
+
+    public static MyRawObject create() {
+        return null;
+    }
+
+    public static class Mapper implements RowMapper<MyRawObject> {
+
+        @Override
+        public MyRawObject mapRow(ResultSet resultSet, int i) throws SQLException {
+            return null;
+        }
+    }
 }

@@ -1,0 +1,14 @@
+syntax="proto3";
+
+package com.axgrid.proto;
+
+option java_package = "com.axgrid.proto";
+option java_multiple_files = true;
+option csharp_namespace = "AxGrid.Internal.Proto";
+
+
+enum AxPPlatform {
+    Windows = 0;
+    OSX = 1;
+    Linux = 2;
+}
