@@ -19,6 +19,7 @@ import javax.tools.JavaFileObject;
 import java.io.Writer;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({"com.axgrid.jdbc.rawsql.RawDAO"})
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
@@ -69,12 +70,16 @@ public class RawDAOsProcessor extends AbstractProcessor {
 
     private void createDAO(Element element) throws Exception {
         var rawDAO = element.getAnnotation(RawDAO.class);
+        TypeElement typeElement = (TypeElement)element;
+
         messager.printMessage(Diagnostic.Kind.NOTE, "found @RawDAO at " + element);
         PackageElement packageElement = procEnv.getElementUtils().getPackageOf( element );
         Name name = element.getSimpleName();
         String mapperName = name.toString() + "RawDAO";
 
         RawDAODescription description = new RawDAODescription();
+
+
         description.setRawDAO(rawDAO);
         description.setObjectName(name.toString());
         description.setPackageName(packageElement.getQualifiedName().toString());
@@ -107,12 +112,13 @@ public class RawDAOsProcessor extends AbstractProcessor {
 
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOMethod();
+        methodDescription.typeUtils = typeUtils();
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
-        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement, typeUtils()));
         if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject)) {
             Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType());
             methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(fieldTypeElement));
@@ -123,6 +129,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
     private RawDAOMethod getQueryMethodDescription(Element methodElement, String method) {
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOQueryMethod();
+        methodDescription.typeUtils = typeUtils();
         var rawQuery = methodElement.getAnnotation(RawDAO.RawQuery.class);
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
@@ -130,7 +137,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         methodDescription.setName(methodElement.getSimpleName().toString());
         methodDescription.setReturnType(executableElement.getReturnType().toString());
         methodDescription.setNullIfObjectEmpty(rawQuery.nullIfObjectEmpty());
-        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement));
+        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement, typeUtils()));
 
         if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject))
             methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(methodDescription.getRawObjectElement()));

@@ -49,4 +49,5 @@ public interface MyRawDAO {
     @RawDAO.RawQuery(value = "select `data` from my_table where id=:id")
     @RawResult.JsonObject
     MyIncludedJsonObject getObjectById(long id);
+
 }

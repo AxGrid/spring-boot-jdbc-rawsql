@@ -2,10 +2,15 @@ package com.axgrid.jdbc.rawsql.processors.dto;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
 import com.axgrid.jdbc.rawsql.RawParam;
+import org.w3c.dom.ls.LSOutput;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class RawDAOMethodParameter {
     String name;
@@ -15,6 +20,22 @@ public class RawDAOMethodParameter {
     RawParam.RawParamObject rawParamObject;
     String valueProcessor = null;
     final List<String> valueProcessorArguments = new ArrayList<>();
+
+    final Pattern mapperPattern =  Pattern.compile("org.springframework.jdbc.core.RowMapper<(.*)>$");
+
+    public Types typeUtils;
+
+    public boolean isRowMapper() {
+
+        TypeElement tu = (TypeElement)typeUtils.asElement(element.asType());
+
+        if (tu == null) return false;
+        System.out.println("---- isRow? :" + element.asType().toString() +" = "+tu.getInterfaces().stream().map(itf -> {
+            return  itf.toString() + " F:" + mapperPattern.matcher(itf.toString()).find();
+        }).collect(Collectors.joining(", ")) );
+        return tu.getInterfaces().stream().map(item -> item.toString()).anyMatch(name -> mapperPattern.matcher(name).find());
+    }
+
 
     @Override
     public String toString() {

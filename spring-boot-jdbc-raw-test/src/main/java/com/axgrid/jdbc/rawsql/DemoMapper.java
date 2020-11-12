@@ -1,6 +1,5 @@
 package com.axgrid.jdbc.rawsql;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +17,6 @@ public class DemoMapper implements RowMapper<MyRawObject> {
         try {
             var r = om.readValue(resultSet.getString(""), DemoMapper.class);
         }catch (JsonProcessingException e) {
-
         }
         return null;
     }

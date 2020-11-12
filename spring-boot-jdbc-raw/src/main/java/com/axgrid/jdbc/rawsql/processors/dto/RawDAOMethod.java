@@ -4,6 +4,7 @@ import com.axgrid.jdbc.rawsql.*;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.util.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ public class RawDAOMethod {
     String resultProcessor = null;
     final List<String> resultProcessorArguments = new ArrayList<>();
 
-
+    public Types typeUtils;
 
     public void createResultProcessor(ExecutableElement executableElement) {
 
@@ -63,10 +64,11 @@ public class RawDAOMethod {
             resultProcessor =  "json";
     }
 
-    public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement) {
+    public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement, Types typeUtils) {
         List<RawDAOMethodParameter> res = new ArrayList<>();
         for(var item : executableElement.getParameters()) {
             var parameter = new RawDAOMethodParameter();
+            parameter.typeUtils = typeUtils;
             parameter.setElement(item);
             parameter.setName(item.getSimpleName().toString());
             parameter.setType(item.asType().toString());
@@ -118,9 +120,9 @@ public class RawDAOMethod {
         return res;
     }
 
-    public String getResultProcessor() {
-        return resultProcessor;
-    }
+    public String getResultProcessor() { return isParameterMapper() ? null : resultProcessor; }
+
+    public boolean isParameterMapper() { return this.getParameters().stream().anyMatch(RawDAOMethodParameter::isRowMapper); }
 
     public void setResultProcessor(String resultProcessor) {
         this.resultProcessor = resultProcessor;
@@ -168,7 +170,7 @@ public class RawDAOMethod {
     }
 
     public String getFlatParameters() {
-        return parameters.stream().map(RawDAOMethodParameter::toString).collect(Collectors.joining(", "));
+        return parameters.stream().map(item -> item.isRowMapper() ? "/* mapper */ "+item.toString() : item.toString()) .collect(Collectors.joining(", "));
     }
 
     public String getSimpleReturn() {
