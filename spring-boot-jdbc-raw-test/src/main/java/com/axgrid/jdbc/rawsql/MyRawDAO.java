@@ -21,6 +21,9 @@ public interface MyRawDAO {
     @RawDAO.RawQuery("select * from my_table where id=:id")
     Optional<MyRawObject> getOptionalById(long id);
 
+    @RawDAO.RawQuery("select age from my_table where id=:id")
+    Optional<Integer> getOptionalAgeById(long id);
+
     @RawDAO.RawQuery("select * from my_table where id=:id")
     MyRawObject getById(@RawParam("id") long id);
 

@@ -1,5 +1,4 @@
 {{~#if resultProcessor~}}
-
         new RowMapper<{{returnType}}>() {
             {{~#equals resultProcessor 'json' }}
             final ObjectMapper rowJsonMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

@@ -65,7 +65,7 @@ public final class RawUtils {
         return typeName.contains("List<");
     }
     public static boolean isOptional(String typeName) {
-        return typeName.contains("Optional<");
+        return typeName.contains("java.util.Optional<");
     }
 
 

@@ -14,9 +14,18 @@ public class RawDAOQueryMethod extends RawDAOMethod {
     public String getMapper() {
         if (mapperType != null) return String.format("new %s()", mapperType);
         if (RawUtils.isPrimitiveOrWrapper(returnType)) return String.format("%s.class", RawUtils.isSimpleType(returnType) ? RawUtils.simpleToObject(returnType) : returnType);
+        if (isOptional()) return getOptionalType(RawUtils.getGenericTypeName(returnType));
         if (RawUtils.isDirectSQLClass(returnType)) return String.format("%s.class", returnType);
         if (isList()) return String.format("new %sRawObjectMapper()", RawUtils.getGenericTypeName(returnType));
+
         return String.format("new %sRawObjectMapper()", returnType);
+    }
+
+    private String getOptionalType(String optionalType) {
+        if (RawUtils.isPrimitiveOrWrapper(optionalType)) return String.format("%s.class", RawUtils.isSimpleType(optionalType) ? RawUtils.simpleToObject(optionalType) : optionalType);
+        if (RawUtils.isDirectSQLClass(optionalType)) return String.format("%s.class", optionalType);
+        if (isList()) return String.format("new %sRawObjectMapper()", RawUtils.getGenericTypeName(optionalType));
+        return String.format("new %sRawObjectMapper()", optionalType);
     }
 
     public String getNull() {

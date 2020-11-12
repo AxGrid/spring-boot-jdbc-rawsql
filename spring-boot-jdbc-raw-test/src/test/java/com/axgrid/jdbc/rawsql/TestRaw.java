@@ -59,6 +59,9 @@ public class TestRaw {
         }catch (EmptyResultDataAccessException e) {
             Assert.assertTrue(true);
         }
+
+        var opt = dao.getOptionalById(Long.MAX_VALUE);
+        Assert.assertTrue(opt.isEmpty());
     }
 
     @Test
@@ -72,6 +75,10 @@ public class TestRaw {
         log.info("NewObject:{}",o);
         Assert.assertNotNull(o.getId());
         Assert.assertNotEquals((long)o.getId(), 0);
+
+        var opt = dao.getOptionalById(o.getId());
+        Assert.assertFalse(opt.isEmpty());
+
     }
 
     @Test
