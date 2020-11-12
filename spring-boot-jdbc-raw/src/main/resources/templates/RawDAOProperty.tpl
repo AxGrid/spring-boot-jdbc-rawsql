@@ -1,4 +1,4 @@
-var parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
+SqlParameterSource parameters = new BeanPropertySqlParameterSource({{rawObjectName}}) {
 
             @Override
             public int getSqlType(String paramName) {

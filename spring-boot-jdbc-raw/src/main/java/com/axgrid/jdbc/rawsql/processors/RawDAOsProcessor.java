@@ -85,6 +85,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         description.setPackageName(packageElement.getQualifiedName().toString());
 
         for(var methodElement : element.getEnclosedElements()){
+            if (methodElement.getKind().isField() || methodElement.getKind().isClass()) continue;
             var method = getMethodName(methodElement);
             switch (method) {
                 case "update":
