@@ -1,6 +1,6 @@
 {{#if packageName}}package {{packageName}};{{/if}}
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.NotImplementedException;
+import com.axgrid.jdbc.rawsql.exceptions.NotImplementedException;
 import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
