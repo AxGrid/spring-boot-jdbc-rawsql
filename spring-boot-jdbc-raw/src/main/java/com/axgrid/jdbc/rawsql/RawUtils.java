@@ -1,15 +1,11 @@
 package com.axgrid.jdbc.rawsql;
 
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.github.jknack.handlebars.internal.lang3.StringUtils;
 
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public final class RawUtils {
@@ -55,7 +51,7 @@ public final class RawUtils {
     public static boolean isPrimitiveOrWrapper(String typeName) {
         if (isSimpleType(typeName)) return true;
         try {
-            return ClassUtils.isPrimitiveOrWrapper(Class.forName(typeName));
+            return isPrimitiveOrWrapper(Class.forName(typeName));
         }catch (ClassNotFoundException e) {
             return false;
         }
@@ -215,4 +211,44 @@ public final class RawUtils {
         }
     }
 
+    private static final Map<Class<?>, Class<?>> primitiveWrapperMap;
+    private static final Map<Class<?>, Class<?>> wrapperPrimitiveMap;
+
+
+    public static boolean isPrimitiveOrWrapper(Class<?> type) {
+        if (type == null) {
+            return false;
+        } else {
+            return type.isPrimitive() || isPrimitiveWrapper(type);
+        }
+    }
+
+    public static boolean isPrimitiveWrapper(Class<?> type) {
+        return wrapperPrimitiveMap.containsKey(type);
+    }
+
+
+    static {
+        primitiveWrapperMap = new HashMap();
+        primitiveWrapperMap.put(Boolean.TYPE, Boolean.class);
+        primitiveWrapperMap.put(Byte.TYPE, Byte.class);
+        primitiveWrapperMap.put(Character.TYPE, Character.class);
+        primitiveWrapperMap.put(Short.TYPE, Short.class);
+        primitiveWrapperMap.put(Integer.TYPE, Integer.class);
+        primitiveWrapperMap.put(Long.TYPE, Long.class);
+        primitiveWrapperMap.put(Double.TYPE, Double.class);
+        primitiveWrapperMap.put(Float.TYPE, Float.class);
+        primitiveWrapperMap.put(Void.TYPE, Void.TYPE);
+        wrapperPrimitiveMap = new HashMap<>();
+
+        Iterator var0 = primitiveWrapperMap.entrySet().iterator();
+        while(var0.hasNext()) {
+            Map.Entry<Class<?>, Class<?>> entry = (Map.Entry)var0.next();
+            Class<?> primitiveClass = (Class)entry.getKey();
+            Class<?> wrapperClass = (Class)entry.getValue();
+            if (!primitiveClass.equals(wrapperClass)) {
+                wrapperPrimitiveMap.put(wrapperClass, primitiveClass);
+            }
+        }
+    }
 }

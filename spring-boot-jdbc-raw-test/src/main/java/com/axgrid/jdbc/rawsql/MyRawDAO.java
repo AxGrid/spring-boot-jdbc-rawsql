@@ -10,12 +10,12 @@ public interface MyRawDAO {
     @RawDAO.RawUpdate("update my_table set name=:name, age=:age where id=:id")
     MyRawObject updateObject(@RawParam.RawParamObject MyRawObject obj);
 
-    @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
-            "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
+    @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`, platform, platform_int) " +
+            "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time, :platform, :platformInt)")
     long createObject(@RawParam.RawParamObject MyRawObject obj);
 
-    @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`) " +
-            "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time)")
+    @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`, platform, platform_int) " +
+            "VALUES (:name, :age, :enumString, :enumInt, :includedJsonObject, :dval, :longDate, :stringDate, :time, :platform, :platformInt)")
     MyRawObject createObject2(@RawParam.RawParamObject MyRawObject obj);
 
     @RawDAO.RawQuery("select * from my_table where id=:id")
