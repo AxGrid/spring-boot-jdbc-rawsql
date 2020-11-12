@@ -7,7 +7,7 @@
     <groupId>com.axgrid.jdbc.rawsql</groupId>
     <artifactId>spring-boot-jdbc-rawsql</artifactId>
     <packaging>pom</packaging>
-    <version>1.3</version>
+    <version>1.4</version>
 
     <modules>
         <module>spring-boot-jdbc-raw</module>
