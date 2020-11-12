@@ -40,6 +40,10 @@ public interface MyRawDAO {
     @RawResult.OrdinalToEnum
     MySimpleEnum getEnumById(long id);
 
+    @RawDAO.RawQuery(value = "select enum2 from my_table where id=:id", mapper = DemoMapper.class)
+    @RawResult.OrdinalToEnum
+    MyRawObject getByIdWithMapper(long id);
+
     @RawDAO.RawQuery(value = "select age from my_table where id=:id")
     int getAgeById(long id);
 

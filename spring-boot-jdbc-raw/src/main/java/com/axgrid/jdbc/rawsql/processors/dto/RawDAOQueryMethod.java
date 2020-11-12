@@ -28,6 +28,8 @@ public class RawDAOQueryMethod extends RawDAOMethod {
         return String.format("new %sRawObjectMapper()", optionalType);
     }
 
+    public String getResultProcessor() { return (isParameterMapper() || mapperType != null) ? null : resultProcessor; }
+
     public String getNull() {
         return RawUtils.getTypeDefaultValue(returnType);
     }

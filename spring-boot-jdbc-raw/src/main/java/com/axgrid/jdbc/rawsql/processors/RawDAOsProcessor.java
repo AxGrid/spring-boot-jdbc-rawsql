@@ -144,7 +144,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
 
         List<? extends TypeMirror> mapperTypes = RawUtils.getTypeMirrorFromAnnotationValue(rawQuery::mapper);
         if (mapperTypes != null && mapperTypes.size() > 0)
-                methodDescription.setMapperType(rawQuery.mapper()[0].getTypeName());
+                methodDescription.setMapperType(mapperTypes.get(0).toString());
 
         methodDescription.createResultProcessor(executableElement);
 
