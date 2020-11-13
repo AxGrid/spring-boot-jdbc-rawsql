@@ -15,13 +15,13 @@ public class RawDAODescription {
     private String objectName;
     private RawDAO rawDAO;
 
-    RawDAOCacheAnnotationCollection cache;
+    RawDAOSpringAnnotationCollection cache;
 
-    public RawDAOCacheAnnotationCollection getCache() {
+    public RawDAOSpringAnnotationCollection getCache() {
         return cache;
     }
 
-    public void setCache(RawDAOCacheAnnotationCollection cache) {
+    public void setCache(RawDAOSpringAnnotationCollection cache) {
         this.cache = cache;
     }
 

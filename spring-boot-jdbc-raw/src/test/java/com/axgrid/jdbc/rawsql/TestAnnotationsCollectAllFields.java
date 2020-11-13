@@ -1,6 +1,5 @@
 package com.axgrid.jdbc.rawsql;
 
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOCacheAnnotationCollection;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +9,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Date;
 
 public class TestAnnotationsCollectAllFields {
 
@@ -70,6 +70,11 @@ public class TestAnnotationsCollectAllFields {
     public void testA2Collect() throws Exception {
         var res = RawUtils.collectAllAnnotationParams(a2);
         System.out.println(res);
+    }
+
+    @Test
+    public void testTimeStamp() throws Exception {
+        System.out.printf("%d\n", new Date().getTime());
     }
 
 }

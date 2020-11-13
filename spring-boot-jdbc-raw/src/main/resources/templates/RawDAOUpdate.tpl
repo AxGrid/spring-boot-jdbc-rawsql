@@ -1,5 +1,6 @@
 @Override
     {{~>RawDAOCache this}}
+    {{~>RawDAOScheduled this}}
     public {{returnType}} {{name}}({{flatParameters}}) {
     {{~#if rawObjectName }}
         {{>RawDAOProperty this}}

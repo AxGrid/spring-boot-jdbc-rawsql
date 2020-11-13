@@ -1,5 +1,6 @@
 @Override
     {{~>RawDAOCache this}}
+    {{~>RawDAOScheduled this}}
     public {{returnType}} {{name}}({{flatParameters}}) {
     {{~#if rawObjectName }}
         {{>RawDAOProperty this}}
@@ -12,7 +13,7 @@
         );
     {{~else}}
         {{~#if nullIfObjectEmpty}}
-        {{~#if optional}}
+        {{#if optional}}
         try{
             return Optional.of(jdbcTemplate.queryForObject("{{query}}", parameters,
                 {{>RawDAOQueryProcessor this}}
@@ -20,7 +21,7 @@
         }catch(EmptyResultDataAccessException ignore){
             return Optional.empty();
         }
-        {{~else~}}
+        {{~else}}
         try{
             return jdbcTemplate.queryForObject("{{query}}", parameters,
                 {{>RawDAOQueryProcessor this}}

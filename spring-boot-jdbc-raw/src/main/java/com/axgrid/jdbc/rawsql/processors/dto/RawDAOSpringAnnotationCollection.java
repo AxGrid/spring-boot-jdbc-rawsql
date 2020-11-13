@@ -1,6 +1,6 @@
 package com.axgrid.jdbc.rawsql.processors.dto;
 
-import com.axgrid.jdbc.rawsql.RawCache;
+import com.axgrid.jdbc.rawsql.RawSpring;
 import com.axgrid.jdbc.rawsql.RawUtils;
 
 import javax.lang.model.element.Element;
@@ -10,30 +10,28 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class RawDAOCacheAnnotationCollection {
+public class RawDAOSpringAnnotationCollection {
 
-    RawCache.Cacheable cacheable;
-    RawCache.CacheEvict cacheEvict;
-    RawCache.CachePut cachePut;
-    RawCache.Caching caching;
+    RawSpring.Cacheable cacheable;
+    RawSpring.CacheEvict cacheEvict;
+    RawSpring.CachePut cachePut;
+    RawSpring.Caching caching;
+    RawSpring.Scheduled scheduled;
 
     public boolean isCache() {
         return cacheable != null || cacheEvict != null || cachePut != null || caching != null;
     }
 
-    public String getParams(Object annotation) {
-//        if (annotation instanceof RawCache.Cacheable)
-//            return RawUtils.arrayOrSingleString(((RawCache.Cacheable)annotation).value());
-//
-//        if (annotation instanceof RawCache.CacheEvict)
-//            return RawUtils.arrayOrSingleString(((RawCache.CacheEvict)annotation).value());
-//
-//        if (annotation instanceof RawCache.CachePut)
-//            return RawUtils.arrayOrSingleString(((RawCache.CachePut)annotation).value());
+    public boolean isScheduled() {
+        return scheduled != null;
+    }
 
+
+    public String getParams(Object annotation) {
         return RawUtils.collectAllAnnotationParams(annotation);
     }
 
+    public String getScheduledParams() { return getParams(scheduled); }
     public String getCacheableParams() { return getParams(cacheable); }
     public String getCacheEvictParams() { return getParams(cacheEvict); }
     public String getCachePutParams() { return getParams(cachePut); }
@@ -53,44 +51,45 @@ public class RawDAOCacheAnnotationCollection {
         return resStrings.stream().filter(Objects::nonNull).collect(Collectors.joining(",\n"));
     }
 
-    public RawCache.Cacheable getCacheable() {
+    public RawSpring.Cacheable getCacheable() {
         return cacheable;
     }
 
-    public void setCacheable(RawCache.Cacheable cacheable) {
+    public void setCacheable(RawSpring.Cacheable cacheable) {
         this.cacheable = cacheable;
     }
 
-    public RawCache.CacheEvict getCacheEvict() {
+    public RawSpring.CacheEvict getCacheEvict() {
         return cacheEvict;
     }
 
-    public void setCacheEvict(RawCache.CacheEvict cacheEvict) {
+    public void setCacheEvict(RawSpring.CacheEvict cacheEvict) {
         this.cacheEvict = cacheEvict;
     }
 
-    public RawCache.CachePut getCachePut() {
+    public RawSpring.CachePut getCachePut() {
         return cachePut;
     }
 
-    public void setCachePut(RawCache.CachePut cachePut) {
+    public void setCachePut(RawSpring.CachePut cachePut) {
         this.cachePut = cachePut;
     }
 
-    public RawCache.Caching getCaching() {
+    public RawSpring.Caching getCaching() {
         return caching;
     }
 
-    public void setCaching(RawCache.Caching caching) {
+    public void setCaching(RawSpring.Caching caching) {
         this.caching = caching;
     }
 
-    public RawDAOCacheAnnotationCollection(Element e) {
-        cacheable = e.getAnnotation(RawCache.Cacheable.class);
-        cacheEvict = e.getAnnotation(RawCache.CacheEvict.class);
-        cachePut = e.getAnnotation(RawCache.CachePut.class);
-        caching = e.getAnnotation(RawCache.Caching.class);
+    public RawDAOSpringAnnotationCollection(Element e) {
+        cacheable = e.getAnnotation(RawSpring.Cacheable.class);
+        cacheEvict = e.getAnnotation(RawSpring.CacheEvict.class);
+        cachePut = e.getAnnotation(RawSpring.CachePut.class);
+        caching = e.getAnnotation(RawSpring.Caching.class);
+        scheduled = e.getAnnotation(RawSpring.Scheduled.class);
     }
 
-    public RawDAOCacheAnnotationCollection() {}
+    public RawDAOSpringAnnotationCollection() {}
 }

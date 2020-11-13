@@ -6,7 +6,29 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
-public @interface RawCache {
+public @interface RawSpring {
+
+    @Target({ElementType.METHOD})
+    @interface Scheduled {
+        String CRON_DISABLED = "-";
+
+        String cron() default "";
+
+        String zone() default "";
+
+        long fixedDelay() default -1L;
+
+        String fixedDelayString() default "";
+
+        long fixedRate() default -1L;
+
+        String fixedRateString() default "";
+
+        long initialDelay() default -1L;
+
+        String initialDelayString() default "";
+    }
+
 
     @Target({ElementType.TYPE, ElementType.METHOD})
     @interface Cacheable {

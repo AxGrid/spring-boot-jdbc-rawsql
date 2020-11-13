@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface MyRawDAO {
 
     @RawDAO.RawUpdate(value = "update my_table set name=:name, age=:age where id=:id")
-    @RawCache.Cacheable(value = {"hello", "world"}, key="5")
+    @RawSpring.Cacheable(value = {"hello", "world"}, key="5")
     MyRawObject updateObject(@RawParam.RawParamObject MyRawObject obj);
 
     @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`, platform, platform_int) " +
@@ -46,7 +46,7 @@ public interface MyRawDAO {
     MyRawObject getByIdWithMapper(long id);
 
     @RawDAO.RawQuery(value = "select age from my_table where id=:id")
-    @RawCache.Cacheable("my cache")
+    @RawSpring.Cacheable("my cache")
     int getAgeById(long id);
 
     @RawDAO.RawQuery(value = "select `date` from my_table where id=:id")
@@ -54,15 +54,19 @@ public interface MyRawDAO {
 
     @RawDAO.RawQuery(value = "select `data` from my_table where id=:id")
     @RawResult.JsonObject
-    @RawCache.Caching(
+    @RawSpring.Caching(
             evict = {
-                    @RawCache.CacheEvict(value = "my name", key = "#id"),
-                    @RawCache.CacheEvict(cacheNames = "my name 2", key = "#id2")
+                    @RawSpring.CacheEvict(value = "my name", key = "#id"),
+                    @RawSpring.CacheEvict(cacheNames = "my name 2", key = "#id2")
             },
             put = {
-                    @RawCache.CachePut(cacheNames = "my name", key = "#id")
+                    @RawSpring.CachePut(cacheNames = "my name", key = "#id")
             }
     )
     MyIncludedJsonObject getObjectById(long id);
+
+    @RawDAO.RawUpdate("DELETE FROM my_table")
+    @RawSpring.Scheduled(fixedDelay = 10000)
+    void clear();
 
 }
