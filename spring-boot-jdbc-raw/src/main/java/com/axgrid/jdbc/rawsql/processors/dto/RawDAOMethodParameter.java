@@ -30,9 +30,6 @@ public class RawDAOMethodParameter {
         TypeElement tu = (TypeElement)typeUtils.asElement(element.asType());
 
         if (tu == null) return false;
-        System.out.println("---- isRow? :" + element.asType().toString() +" = "+tu.getInterfaces().stream().map(itf -> {
-            return  itf.toString() + " F:" + mapperPattern.matcher(itf.toString()).find();
-        }).collect(Collectors.joining(", ")) );
         return tu.getInterfaces().stream().map(item -> item.toString()).anyMatch(name -> mapperPattern.matcher(name).find());
     }
 
