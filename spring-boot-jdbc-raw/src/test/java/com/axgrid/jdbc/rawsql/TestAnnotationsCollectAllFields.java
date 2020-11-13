@@ -48,6 +48,10 @@ public class TestAnnotationsCollectAllFields {
     @MyTestAnnotation({"hello", "word"})
     public final class Test2Class {
 
+        @RawSpring.Scheduled(fixedDelay = 10_000)
+        public void method() {
+
+        }
     }
 
     @Before
@@ -56,6 +60,10 @@ public class TestAnnotationsCollectAllFields {
          a = t.getClass().getAnnotation(MyTestAnnotation.class);
          a2 = Test2Class.class.getAnnotation(MyTestAnnotation.class);
     }
+
+
+
+
 
     @Test
     public void testACollect() throws Exception {

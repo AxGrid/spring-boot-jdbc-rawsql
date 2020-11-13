@@ -297,6 +297,7 @@ public final class RawUtils {
     public static boolean annotationMethodHasValue(Object annotation, Method method) {
         try {
             var result = method.invoke(annotation);
+            if (result instanceof Long) return true;
             if (result instanceof Boolean) return true;
             if (result instanceof String) return !result.equals("");
             if (result instanceof String[]) return ((String[])result).length > 0;
