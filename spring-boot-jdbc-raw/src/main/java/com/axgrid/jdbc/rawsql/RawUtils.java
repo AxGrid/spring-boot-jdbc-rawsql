@@ -5,8 +5,11 @@ import com.github.jknack.handlebars.internal.lang3.StringUtils;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class RawUtils {
     static Pattern genericPattern =  Pattern.compile("^(.*)<(.*)>$");
@@ -22,6 +25,14 @@ public final class RawUtils {
             "boolean",
             "double",
             "float"
+    ));
+
+    final static Set<String> baseMethods = new HashSet<>(Arrays.asList(
+       "equals",
+       "toString",
+       "hashCode",
+       "annotationType",
+       "value"
     ));
 
     @FunctionalInterface
@@ -250,5 +261,57 @@ public final class RawUtils {
                 wrapperPrimitiveMap.put(wrapperClass, primitiveClass);
             }
         }
+    }
+
+    public static String arrayOrSingleString(Object[] array) {
+        if (array.length == 0) return "\"\"";
+        if (array.length == 1) return String.format("\"%s\"", array[0].toString());
+        return String.format("{%s}", Arrays.asList(array).stream().map(item -> String.format("\"%s\"", item.toString())).collect(Collectors.joining(", ")));
+    }
+
+    public static String getAnnotationValue(Object o) {
+        if (o == null) return "null";
+        if (o instanceof String) return "\""+ o.toString() + "\"";
+        if (o instanceof String[]) return arrayOrSingleString((String[])o);
+        if (o instanceof Boolean) return o.toString();
+        if (o instanceof Integer || o instanceof Long) return o.toString();
+        return "null";
+    }
+
+    public static List<Method> excludeBaseClassMethods(Method[] methods) {
+        return Arrays.stream(methods).filter(method -> method.getParameterCount() == 0 && !baseMethods.contains(method.getName())).collect(Collectors.toList());
+    }
+
+    public static boolean annotationMethodHasValue(Object annotation, Method method) {
+        try {
+            var result = method.invoke(annotation);
+            if (result instanceof Boolean) return true;
+            if (result instanceof String) return !result.equals("");
+            if (result instanceof String[]) return ((String[])result).length > 0;
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return false;
+        }
+        return false;
+    }
+
+
+
+    public static String collectAllAnnotationParams(Object annotation) {
+         var methods = excludeBaseClassMethods(annotation.getClass().getDeclaredMethods());
+         List<String> parameters = new ArrayList<>();
+         for(var method : methods) {
+             if (!annotationMethodHasValue(annotation, method)) continue;
+             Object result = null;
+
+             try {
+                 result = method.invoke(annotation);
+             } catch (IllegalAccessException | InvocationTargetException e) {
+                 e.printStackTrace();
+             }
+             String parameter = String.format("%s = %s", method.getName(), getAnnotationValue(result));
+             parameters.add(parameter);
+             System.out.println("p: "+ parameter);
+         }
+         return String.join(", ", parameters);
     }
 }

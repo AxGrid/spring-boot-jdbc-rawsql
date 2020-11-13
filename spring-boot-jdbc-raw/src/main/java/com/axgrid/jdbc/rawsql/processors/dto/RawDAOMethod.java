@@ -19,7 +19,7 @@ public class RawDAOMethod {
     String query;
 
     RawObjectDescription rawObject;
-    RawCacheAnnotationCollection cache;
+    RawDAOCacheAnnotationCollection cache;
     List<RawDAOMethodParameter> parameters = new ArrayList<>();
 
     String resultProcessor = null;
@@ -64,11 +64,11 @@ public class RawDAOMethod {
             resultProcessor =  "json";
     }
 
-    public RawCacheAnnotationCollection getCache() {
+    public RawDAOCacheAnnotationCollection getCache() {
         return cache;
     }
 
-    public void setCache(RawCacheAnnotationCollection cache) {
+    public void setCache(RawDAOCacheAnnotationCollection cache) {
         this.cache = cache;
     }
 

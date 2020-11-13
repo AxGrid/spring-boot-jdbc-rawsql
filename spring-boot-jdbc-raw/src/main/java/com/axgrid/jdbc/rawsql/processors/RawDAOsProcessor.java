@@ -16,7 +16,6 @@ import javax.tools.JavaFileObject;
 import java.io.Writer;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes({"com.axgrid.jdbc.rawsql.RawDAO"})
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
@@ -80,7 +79,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         description.setRawDAO(rawDAO);
         description.setObjectName(name.toString());
         description.setPackageName(packageElement.getQualifiedName().toString());
-        description.setCache(new RawCacheAnnotationCollection(element));
+        description.setCache(new RawDAOCacheAnnotationCollection(element));
         for(var methodElement : element.getEnclosedElements()){
             if (methodElement.getKind().isField() || methodElement.getKind().isClass()) continue;
             var method = getMethodName(methodElement);
@@ -114,7 +113,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         var rawSave = methodElement.getAnnotation(RawDAO.RawSave.class);
         var methodDescription = new RawDAOSaveMethod();
         methodDescription.typeUtils = typeUtils();
-        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
+        methodDescription.setCache(new RawDAOCacheAnnotationCollection(methodElement));
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
@@ -138,7 +137,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOMethod();
         methodDescription.typeUtils = typeUtils();
-        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
+        methodDescription.setCache(new RawDAOCacheAnnotationCollection(methodElement));
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
@@ -156,7 +155,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOQueryMethod();
         methodDescription.typeUtils = typeUtils();
-        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
+        methodDescription.setCache(new RawDAOCacheAnnotationCollection(methodElement));
         var rawQuery = methodElement.getAnnotation(RawDAO.RawQuery.class);
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);

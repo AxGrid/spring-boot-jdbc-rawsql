@@ -1,4 +1,5 @@
 @Override
+        {{~>RawDAOCache this}}
         public {{returnType}} {{name}}({{flatParameters}}) {
             if ({{rawObjectName}}.{{id}}() == null) {
                 {{~#if void~}}

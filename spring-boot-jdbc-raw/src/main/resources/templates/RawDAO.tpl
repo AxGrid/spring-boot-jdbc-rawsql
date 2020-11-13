@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 
 @Slf4j
 @Service
+{{~>RawDAOCache this}}
 public class {{objectName}}RawDAO implements {{objectName}} {
 
     @Autowired
