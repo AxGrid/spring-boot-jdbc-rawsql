@@ -1,5 +1,7 @@
 package com.axgrid.jdbc.rawsql;
 
+import com.axgrid.proto.AxPProtoObject;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -68,5 +70,13 @@ public interface MyRawDAO {
     @RawDAO.RawUpdate("DELETE FROM my_table")
     @RawSpring.Scheduled(fixedDelay = 10000)
     void clear();
+
+    @RawDAO.RawQuery(value = "select proto_object_builder from my_table where id=:id")
+    @RawResult.ProtoObject
+    AxPProtoObject.Builder getProtoBuilderById(long id);
+
+    @RawDAO.RawQuery(value = "select proto_object from my_table where id=:id")
+    @RawResult.ProtoObject
+    AxPProtoObject getProtoById(long id);
 
 }

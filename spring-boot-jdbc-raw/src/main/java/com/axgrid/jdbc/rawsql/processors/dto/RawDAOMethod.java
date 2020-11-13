@@ -197,6 +197,11 @@ public class RawDAOMethod {
         return rawParamObjectArgument.name;
     }
 
+    public String getBuilderReturnType() {
+        if (RawUtils.isBuilder(returnType)) return RawUtils.getBuilderType(returnType);
+        return returnType;
+    }
+
     public List<RawDAOMethodParameter> getParameters() {
         return parameters;
     }
@@ -208,6 +213,8 @@ public class RawDAOMethod {
     public boolean isVoid() {
         return returnType.equals("void");
     }
+
+    public boolean isReturnTypeBuilder() { return RawUtils.isBuilder(returnType); }
 
     public String getName() {
         return name;

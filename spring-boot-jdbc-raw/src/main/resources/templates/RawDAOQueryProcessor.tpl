@@ -36,8 +36,13 @@
             {{~#equals resultProcessor 'proto' ~}}
                 return RawObjectUtils.executeOrNull(resultSet.getBytes(1), (v) -> {
                     try{
-                        return {{returnType}}.parseFrom(new byte[0])
-                    }catch(InvalidProtocolBufferException e) {
+                        {{~#if returnTypeBuilder }}
+                            return {{builderReturnType}}.parseFrom(new byte[0]).toBuilder();
+                        {{else}}
+                            return {{builderReturnType}}.parseFrom(new byte[0]);
+                        {{~/if}}
+
+                    }catch(com.google.protobuf.InvalidProtocolBufferException e) {
                         if (log.isWarnEnabled()) log.warn("RawSQL proto exception.", e);
                         return null;
                     }
