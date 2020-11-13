@@ -19,7 +19,7 @@ public class RawDAOMethod {
     String query;
 
     RawObjectDescription rawObject;
-
+    RawCacheAnnotationCollection cache;
     List<RawDAOMethodParameter> parameters = new ArrayList<>();
 
     String resultProcessor = null;
@@ -62,6 +62,14 @@ public class RawDAOMethod {
 
         if (executableElement.getAnnotation(RawResult.JsonObject.class) != null)
             resultProcessor =  "json";
+    }
+
+    public RawCacheAnnotationCollection getCache() {
+        return cache;
+    }
+
+    public void setCache(RawCacheAnnotationCollection cache) {
+        this.cache = cache;
     }
 
     public static List<RawDAOMethodParameter> getParameters(ExecutableElement executableElement, Types typeUtils) {

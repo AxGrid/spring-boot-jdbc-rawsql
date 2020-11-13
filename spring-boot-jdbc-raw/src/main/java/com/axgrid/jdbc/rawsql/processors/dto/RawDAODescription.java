@@ -15,6 +15,16 @@ public class RawDAODescription {
     private String objectName;
     private RawDAO rawDAO;
 
+    RawCacheAnnotationCollection cache;
+
+    public RawCacheAnnotationCollection getCache() {
+        return cache;
+    }
+
+    public void setCache(RawCacheAnnotationCollection cache) {
+        this.cache = cache;
+    }
+
     public String getClassName() { return objectName + "RawDAO"; }
 
     private final List<RawDAOMethod> methods = new ArrayList<>();

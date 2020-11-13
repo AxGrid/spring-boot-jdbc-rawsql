@@ -80,7 +80,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         description.setRawDAO(rawDAO);
         description.setObjectName(name.toString());
         description.setPackageName(packageElement.getQualifiedName().toString());
-
+        description.setCache(new RawCacheAnnotationCollection(element));
         for(var methodElement : element.getEnclosedElements()){
             if (methodElement.getKind().isField() || methodElement.getKind().isClass()) continue;
             var method = getMethodName(methodElement);
@@ -114,6 +114,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         var rawSave = methodElement.getAnnotation(RawDAO.RawSave.class);
         var methodDescription = new RawDAOSaveMethod();
         methodDescription.typeUtils = typeUtils();
+        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
@@ -137,6 +138,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOMethod();
         methodDescription.typeUtils = typeUtils();
+        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
         methodDescription.setMethod(method);
@@ -154,6 +156,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         ExecutableElement executableElement = (ExecutableElement) methodElement;
         var methodDescription = new RawDAOQueryMethod();
         methodDescription.typeUtils = typeUtils();
+        methodDescription.setCache(new RawCacheAnnotationCollection(methodElement));
         var rawQuery = methodElement.getAnnotation(RawDAO.RawQuery.class);
         methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
         messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
