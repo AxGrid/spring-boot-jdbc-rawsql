@@ -79,4 +79,8 @@ public interface MyRawDAO {
     @RawResult.ProtoObject
     AxPProtoObject getProtoById(long id);
 
+    @RawDAO.RawQuery(value = "select proto_object_builder from my_table where age>:age")
+    @RawResult.ProtoObject
+    List<AxPProtoObject.Builder> getAllProtoById(int age);
+
 }

@@ -38,6 +38,13 @@ public class RawObjectDescription {
         return objectName;
     }
 
+    public String getRealObjectName() {
+        String on = objectName;
+        if (RawUtils.isList(on)) on = RawUtils.getGenericTypeName(on);
+        if (RawUtils.isBuilder(on)) on = RawUtils.getBuilderType(on);
+        return on;
+    }
+
     public void setObjectName(String objectName) {
         this.objectName = objectName;
     }

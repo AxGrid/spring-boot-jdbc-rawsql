@@ -27,6 +27,8 @@ public class RawDAOMethod {
 
     public Types typeUtils;
 
+
+
     public void createResultProcessor(ExecutableElement executableElement) {
 
         if (executableElement.getAnnotation(RawResult.OrdinalToEnum.class)!=null)
@@ -163,6 +165,22 @@ public class RawDAOMethod {
         return pf;
     }
 
+    public String getRealObjectName() {
+        String rt = returnType;
+        if (RawUtils.isList(rt)) rt = RawUtils.getGenericTypeName(rt);
+        //if (RawUtils.isBuilder(rt)) rt = RawUtils.getBuilderType(rt);
+        return rt;
+    }
+
+
+
+    public String getBuilderName() {
+        String rt = returnType;
+        if (RawUtils.isList(rt)) rt = RawUtils.getGenericTypeName(rt);
+        if (RawUtils.isBuilder(rt)) rt = RawUtils.getBuilderType(rt);
+        return rt;
+    }
+
     public RawObjectDescription getRawObject() {
         return rawObject;
     }
@@ -198,8 +216,10 @@ public class RawDAOMethod {
     }
 
     public String getBuilderReturnType() {
-        if (RawUtils.isBuilder(returnType)) return RawUtils.getBuilderType(returnType);
-        return returnType;
+        String rt = returnType;
+        if (RawUtils.isList(rt)) rt = RawUtils.getGenericTypeName(rt);
+        if (RawUtils.isBuilder(rt)) return RawUtils.getBuilderType(rt);
+        return rt;
     }
 
     public List<RawDAOMethodParameter> getParameters() {
@@ -214,7 +234,11 @@ public class RawDAOMethod {
         return returnType.equals("void");
     }
 
-    public boolean isReturnTypeBuilder() { return RawUtils.isBuilder(returnType); }
+    public boolean isReturnTypeBuilder() {
+        String rt = returnType;
+        if (RawUtils.isList(rt)) rt = RawUtils.getGenericTypeName(rt);
+        return RawUtils.isBuilder(rt);
+    }
 
     public String getName() {
         return name;
