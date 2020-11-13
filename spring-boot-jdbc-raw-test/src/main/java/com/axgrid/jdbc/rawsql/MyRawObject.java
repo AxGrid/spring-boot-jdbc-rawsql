@@ -1,6 +1,7 @@
 package com.axgrid.jdbc.rawsql;
 
 
+import com.axgrid.proto.AxPProtoObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +40,15 @@ public class MyRawObject implements Serializable {
     @RawObject.Include("data")
     @RawObject.JsonObject
     MyIncludedJsonObject includedJsonObject;
+
+    @RawObject.ProtoObject
+    @RawObject.Include("proto_object_builder")
+    AxPProtoObject.Builder protoObjectBuilder;
+
+    @RawObject.ProtoObject
+    @RawObject.Include("proto_object")
+    AxPProtoObject protoObject;
+
 
     @RawObject.Include("date")
     Date time = new Date();

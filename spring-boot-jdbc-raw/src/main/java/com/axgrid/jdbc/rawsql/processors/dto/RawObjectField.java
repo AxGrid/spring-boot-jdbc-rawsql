@@ -21,6 +21,7 @@ public class RawObjectField {
     boolean include;
     boolean exclude;
     boolean jsonObject = false;
+    boolean builder = false;
 
     String valueProcessor = null;
     final List<String> valueProcessorArguments = new ArrayList<>();
@@ -28,6 +29,10 @@ public class RawObjectField {
     public List<String> getValueProcessorArguments() {
         return valueProcessorArguments;
     }
+
+    public boolean isBuilder() { return builder; }
+
+    public void setBuilder(boolean builder) { this.builder = builder; }
 
     public boolean isGetter() { return getter; }
 
@@ -57,7 +62,9 @@ public class RawObjectField {
     }
 
     public String getObjectType() {
+        if (isBuilder()) return RawUtils.getBuilderType(getType());
         return RawUtils.isSimpleType(type) ? RawUtils.simpleToObject(type) : type;
+
     }
 
     @Override

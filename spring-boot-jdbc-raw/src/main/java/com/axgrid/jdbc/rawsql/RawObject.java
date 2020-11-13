@@ -30,7 +30,9 @@ public @interface RawObject {
     @interface JsonObject { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @interface ProtoObject { }
+    @interface ProtoObject {
+        boolean builder() default false;
+    }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
     @interface EnumToString {

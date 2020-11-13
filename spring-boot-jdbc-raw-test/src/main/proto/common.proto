@@ -12,3 +12,9 @@ enum AxPPlatform {
     OSX = 1;
     Linux = 2;
 }
+
+
+message AxPProtoObject {
+    uint64 id = 1;
+    string message = 2;
+}

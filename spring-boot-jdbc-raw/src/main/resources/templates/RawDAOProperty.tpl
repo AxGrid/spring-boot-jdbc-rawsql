@@ -48,7 +48,7 @@ SqlParameterSource parameters = new BeanPropertySqlParameterSource({{rawObjectNa
                     }
                 {{/equals}}
                 {{~#equals valueProcessor 'proto'}}
-                    value = (({{type}})value).toByteArray();
+                    value = (({{type}})value){{valueProcessorArguments.[0]}}.toByteArray();
                 {{/equals}}
                 {{~#equals valueProcessor 'enumToString'}}
                     value = (({{type}})value).{{valueProcessorArguments.[0]}}();

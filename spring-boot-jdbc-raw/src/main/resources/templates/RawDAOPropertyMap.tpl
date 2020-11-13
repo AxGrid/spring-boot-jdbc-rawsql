@@ -6,7 +6,7 @@ Map parameters = new HashMap();
         {{~/equals~}}
 
         {{~#equals valueProcessor 'proto'}}
-        parameters.put("{{name}}", {{name}} == null ? null : {{name}}.toByteArray());
+        parameters.put("{{name}}", {{name}} == null ? null : {{name}}{{valueProcessorArguments.[0]}}.toByteArray());
         {{/equals}}
         {{~#equals valueProcessor 'enumToString'}}
         parameters.put("{{name}}", {{name}}.{{valueProcessorArguments.[0]}}());

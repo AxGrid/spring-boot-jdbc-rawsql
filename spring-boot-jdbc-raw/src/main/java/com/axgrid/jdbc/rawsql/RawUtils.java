@@ -15,6 +15,7 @@ public final class RawUtils {
     static Pattern genericPattern =  Pattern.compile("^(.*)<(.*)>$");
     static Pattern setterPattern =  Pattern.compile("^set(\\w+)$");
     static Pattern getterPattern =  Pattern.compile("^get(\\w+)$");
+    static Pattern builderPattern =  Pattern.compile("(.*).Builder$");
 
     final static Set<String> primitiveName = new HashSet<>(Arrays.asList(
             "long",
@@ -193,6 +194,18 @@ public final class RawUtils {
         if (!matcher.find()) return null;
         return StringUtils.uncapitalize(matcher.group(1));
     }
+
+    public static boolean isBuilder(String typeName) {
+        var mather = builderPattern.matcher(typeName);
+        return mather.find();
+    }
+
+    public static String getBuilderType(String typeName) {
+        var mather = builderPattern.matcher(typeName);
+        if (mather.find()) return mather.group(1);
+        return null;
+    }
+
 
     public static String getFromResultSet(String field, String typeName) {
         switch (typeName){

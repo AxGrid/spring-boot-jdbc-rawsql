@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS my_table(
     `stringDate` varchar(100),
     `date` datetime,
     `platform` varchar(100),
-    `platform_int` int
+    `platform_int` int,
+    `proto_object_builder` longblob,
+    `proto_object` longblob
 );
 
 /*

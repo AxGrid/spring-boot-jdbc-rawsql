@@ -18,11 +18,15 @@ public class {{className}} implements RowMapper<{{objectName}}> {
     public {{objectName}} mapRow(ResultSet resultSet, int i) throws SQLException {
         {{objectName}} res = new {{objectName}}();
         {{~#each nonExcludeFields}}
+        {{~#equals valueProcessor 'proto' ~}}
+        {{>RawMapperProtoObject this ~}}
+        {{~else~}}
         {{~#if jsonObject}}
         {{>RawMapperJsonObject this ~}}
         {{~else}}
         {{>RawMapperField this ~}}
         {{~/if}}
+        {{~/equals}}
         {{~/each}}
         return res;
     }

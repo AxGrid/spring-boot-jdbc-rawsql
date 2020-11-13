@@ -120,8 +120,17 @@ public class RawObjectsProcessor extends AbstractProcessor {
             field.setValueProcessor("json");
         }
 
-        if (element.getAnnotation(RawObject.ProtoObject.class) != null) {
+        var protoObject = element.getAnnotation(RawObject.ProtoObject.class);
+        if (protoObject != null) {
             field.setValueProcessor("proto");
+            field.setBuilder(RawUtils.isBuilder(field.getType()));
+            if (field.isBuilder() || protoObject.builder()) {
+                field.getValueProcessorArguments().add(".build()");
+                field.getValueProcessorArguments().add(".toBuilder()");
+            }else {
+                field.getValueProcessorArguments().add("");
+                field.getValueProcessorArguments().add("");
+            }
         }
 
         if (enumToInteger != null) {

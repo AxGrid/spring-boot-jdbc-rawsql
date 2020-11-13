@@ -46,4 +46,13 @@ public final class RawObjectUtils {
         return func.apply(value);
     }
 
+    public static <T, R> R nullIfException(T value, Function<T, R> func) {
+        if (value == null) return null;
+        try {
+            return func.apply(value);
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
 }
