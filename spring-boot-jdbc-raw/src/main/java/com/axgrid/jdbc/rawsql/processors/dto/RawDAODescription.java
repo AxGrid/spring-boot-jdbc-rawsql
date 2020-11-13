@@ -31,6 +31,10 @@ public class RawDAODescription {
         return methods.stream().filter(item -> item.method.equals("insert")).collect(Collectors.toList());
     }
 
+    public List<RawDAOMethod> getSaveMethods() {
+        return methods.stream().filter(item -> item.method.equals("save")).collect(Collectors.toList());
+    }
+
     public List<RawDAOMethod> getUndefinedMethods() {
         return methods.stream().filter(item -> item.method.equals("undefined")).collect(Collectors.toList());
     }

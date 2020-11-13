@@ -38,6 +38,14 @@ public @interface RawDAO {
         String query() default "";
     }
 
+
+    @Target(ElementType.METHOD)
+    @interface RawSave {
+        String create() default "create";
+        String update() default "update";
+        String id() default "getId";
+    }
+
 //    @Target(ElementType.PARAMETER)
 //    @interface RawParamObject {
 //    }

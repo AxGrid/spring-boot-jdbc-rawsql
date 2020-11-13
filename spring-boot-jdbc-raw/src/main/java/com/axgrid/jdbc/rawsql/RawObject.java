@@ -56,7 +56,7 @@ public @interface RawObject {
     @interface DateToLong { }
 
     @Target({ElementType.FIELD, ElementType.METHOD})
-    @interface Processor{
+    @interface Processor {
         @AliasFor("name")
         String value() default "";
         @AliasFor("value")

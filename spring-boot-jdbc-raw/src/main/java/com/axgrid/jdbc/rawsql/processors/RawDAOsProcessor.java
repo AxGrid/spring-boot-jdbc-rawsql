@@ -3,10 +3,7 @@ package com.axgrid.jdbc.rawsql.processors;
 
 import com.axgrid.jdbc.rawsql.RawDAO;
 import com.axgrid.jdbc.rawsql.RawUtils;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAODescription;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethod;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOMethodParameter;
-import com.axgrid.jdbc.rawsql.processors.dto.RawDAOQueryMethod;
+import com.axgrid.jdbc.rawsql.processors.dto.*;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -95,6 +92,9 @@ public class RawDAOsProcessor extends AbstractProcessor {
                 case "query":
                     description.getMethods().add(getQueryMethodDescription(methodElement, method));
                     break;
+                case "save":
+                    description.getMethods().add(getSaveMethodDescription(methodElement, method));
+                    break;
                 default:
                     description.getMethods().add(getMethodDescription(methodElement, "undefined"));
                     break;
@@ -107,6 +107,29 @@ public class RawDAOsProcessor extends AbstractProcessor {
         Writer writer = mapperFile.openWriter();
         writer.append(template.generate(description));
         writer.close();
+    }
+
+    private RawDAOMethod getSaveMethodDescription(Element methodElement, String method) {
+        ExecutableElement executableElement = (ExecutableElement) methodElement;
+        var rawSave = methodElement.getAnnotation(RawDAO.RawSave.class);
+        var methodDescription = new RawDAOSaveMethod();
+        methodDescription.typeUtils = typeUtils();
+        methodDescription.setQuery(getMethodAnnotationQuery(methodElement));
+        messager.printMessage(Diagnostic.Kind.NOTE, "  add method:" + methodElement.getSimpleName().toString()+" as "+method);
+        methodDescription.setMethod(method);
+        methodDescription.setName(methodElement.getSimpleName().toString());
+        methodDescription.setReturnType(executableElement.getReturnType().toString());
+        methodDescription.setParameters(RawDAOMethod.getParameters(executableElement, typeUtils()));
+        if (methodDescription.getParameters().stream().anyMatch(RawDAOMethodParameter::isRawParamObject)) {
+            Element fieldTypeElement = getElement(methodDescription.getRawObjectElement().asType());
+            methodDescription.setRawObject(RawObjectsProcessor.getRawObjectDescription(fieldTypeElement));
+        }
+
+        methodDescription.setId(rawSave.id());
+        methodDescription.setCreate(rawSave.create());
+        methodDescription.setUpdate(rawSave.update());
+
+        return methodDescription;
     }
 
     private RawDAOMethod getMethodDescription(Element methodElement, String method) {
@@ -157,6 +180,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         if (methodElement.getAnnotation(RawDAO.RawUpdate.class) != null) return "update";
         if (methodElement.getAnnotation(RawDAO.RawQuery.class) != null) return "query";
         if (methodElement.getAnnotation(RawDAO.RawInsert.class) != null) return "insert";
+        if (methodElement.getAnnotation(RawDAO.RawSave.class) != null) return "save";
         return "undefined";
     }
 

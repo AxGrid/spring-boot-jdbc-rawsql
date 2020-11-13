@@ -42,6 +42,10 @@ public class {{objectName}}RawDAO implements {{objectName}} {
     {{>RawDAOUpdate this }}
     {{~/each}}
 
+    {{~#each saveMethods}}
+    {{>RawDAOSave this }}
+    {{~/each}}
+
     {{~#each insertMethods}}
     {{>RawDAOInsert this }}
     {{~/each}}
