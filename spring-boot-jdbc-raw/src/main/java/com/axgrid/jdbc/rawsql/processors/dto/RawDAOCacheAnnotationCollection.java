@@ -22,14 +22,14 @@ public class RawDAOCacheAnnotationCollection {
     }
 
     public String getParams(Object annotation) {
-        if (annotation instanceof RawCache.Cacheable && ((RawCache.Cacheable)annotation).value().length > 0)
-            return RawUtils.arrayOrSingleString(((RawCache.Cacheable)annotation).value());
-
-        if (annotation instanceof RawCache.CacheEvict && ((RawCache.CacheEvict)annotation).value().length > 0)
-            return RawUtils.arrayOrSingleString(((RawCache.CacheEvict)annotation).value());
-
-        if (annotation instanceof RawCache.CachePut && ((RawCache.CachePut)annotation).value().length > 0)
-            return RawUtils.arrayOrSingleString(((RawCache.CachePut)annotation).value());
+//        if (annotation instanceof RawCache.Cacheable)
+//            return RawUtils.arrayOrSingleString(((RawCache.Cacheable)annotation).value());
+//
+//        if (annotation instanceof RawCache.CacheEvict)
+//            return RawUtils.arrayOrSingleString(((RawCache.CacheEvict)annotation).value());
+//
+//        if (annotation instanceof RawCache.CachePut)
+//            return RawUtils.arrayOrSingleString(((RawCache.CachePut)annotation).value());
 
         return RawUtils.collectAllAnnotationParams(annotation);
     }
@@ -49,8 +49,6 @@ public class RawDAOCacheAnnotationCollection {
         resStrings.add(caching.evict().length == 0 ?
                 null :
                 "evict = {" + Arrays.stream(caching.evict()).map(item -> String.format("@org.springframework.cache.annotation.CacheEvict(%s)", getParams(item))).collect(Collectors.joining(",\n")) + "}");
-
-        System.out.println("--- > ARRAY: " + resStrings.stream().filter(Objects::isNull).collect(Collectors.joining(", ")));
 
         return resStrings.stream().filter(Objects::nonNull).collect(Collectors.joining(",\n"));
     }

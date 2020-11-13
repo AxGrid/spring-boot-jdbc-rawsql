@@ -7,8 +7,8 @@ import java.util.Optional;
 @RawDAO
 public interface MyRawDAO {
 
-    @RawDAO.RawUpdate("update my_table set name=:name, age=:age where id=:id")
-    @RawCache.Cacheable(cacheNames = {"hello", "world"})
+    @RawDAO.RawUpdate(value = "update my_table set name=:name, age=:age where id=:id")
+    @RawCache.Cacheable(value = {"hello", "world"}, key="5")
     MyRawObject updateObject(@RawParam.RawParamObject MyRawObject obj);
 
     @RawDAO.RawInsert("insert into my_table (`name`, age, enum1, enum2, `data`, dval, longDate, stringDate, `date`, platform, platform_int) " +
@@ -56,7 +56,7 @@ public interface MyRawDAO {
     @RawResult.JsonObject
     @RawCache.Caching(
             evict = {
-                    @RawCache.CacheEvict(cacheNames = "my name", key = "#id"),
+                    @RawCache.CacheEvict(value = "my name", key = "#id"),
                     @RawCache.CacheEvict(cacheNames = "my name 2", key = "#id2")
             },
             put = {

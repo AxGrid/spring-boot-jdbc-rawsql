@@ -31,8 +31,7 @@ public final class RawUtils {
        "equals",
        "toString",
        "hashCode",
-       "annotationType",
-       "value"
+       "annotationType"
     ));
 
     @FunctionalInterface
