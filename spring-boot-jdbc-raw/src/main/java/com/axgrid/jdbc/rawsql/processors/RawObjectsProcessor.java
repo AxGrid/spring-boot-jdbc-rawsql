@@ -12,8 +12,14 @@ import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @SupportedAnnotationTypes("com.axgrid.jdbc.rawsql.RawObject")
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
@@ -23,6 +29,7 @@ public class RawObjectsProcessor extends AbstractProcessor {
     private Filer filer;
     private Messager messager;
     private ProcessingEnvironment procEnv;
+
 
     @Override
     public synchronized void init(ProcessingEnvironment pe) {
@@ -49,9 +56,22 @@ public class RawObjectsProcessor extends AbstractProcessor {
 
     public static RawObjectDescription getRawObjectDescription(Element element) {
         RawObjectDescription description = new RawObjectDescription();
+        List<Future<String>> futures = new ArrayList<>();
+        ExecutorService executorService = Executors.newWorkStealingPool();
+        for(var field : element.getEnclosedElements()) {
+            futures.add(executorService.submit(() -> {
+                createFields(field, description.getFields());
+                return field.getSimpleName().toString();
+            }));
+        }
 
-        for(var field : element.getEnclosedElements()) //TODO: Order by field, setter, getter
-            createFields(field, description.getFields());
+        for(var future : futures) {
+            try {
+                future.get();
+            }catch (InterruptedException | ExecutionException ignore) {
+                break;
+            }
+        }
         return description;
     }
 

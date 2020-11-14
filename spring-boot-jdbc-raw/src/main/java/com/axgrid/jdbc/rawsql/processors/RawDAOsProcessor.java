@@ -14,8 +14,13 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @SupportedAnnotationTypes({"com.axgrid.jdbc.rawsql.RawDAO"})
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
@@ -29,6 +34,8 @@ public class RawDAOsProcessor extends AbstractProcessor {
 
     TypeElement annotationRawObject;
 
+    ExecutorService executorService;
+
     final Types typeUtils() { return processingEnv.getTypeUtils(); }
     final Elements elementUtils() { return processingEnv.getElementUtils(); }
 
@@ -38,7 +45,7 @@ public class RawDAOsProcessor extends AbstractProcessor {
         this.filer = pe.getFiler();
         this.messager = pe.getMessager();
         this.procEnv = pe;
-
+        executorService = Executors.newWorkStealingPool();
     }
 
     public Element getElement(TypeMirror type) {
@@ -50,17 +57,31 @@ public class RawDAOsProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         this.roundEnv = roundEnv;
+        List<Future<String>> futures = new ArrayList<>();
         for (TypeElement annotation : annotations) {
             messager.printMessage(Diagnostic.Kind.NOTE, "Raw DAO process annotation: " + annotation.getSimpleName());
+
             for (Element element : roundEnv.getElementsAnnotatedWith(annotation)) {
-                try {
-                    createDAO(element);
-                } catch (Exception e) {
-                    messager.printMessage(Diagnostic.Kind.ERROR, "Raw DAO creation exception: " + e.getMessage());
-                    throw new RuntimeException("Raw DAO create exception", e);
-                }
+                var future = executorService.submit(() -> {
+                    try {
+                        createDAO(element);
+                        return element.getSimpleName().toString();
+                    } catch (Exception e) {
+                        messager.printMessage(Diagnostic.Kind.ERROR, "Raw DAO creation exception: " + e.getMessage());
+                        throw new RuntimeException("Raw DAO create exception", e);
+                    }
+                });
+                futures.add(future);
             }
         }
+        for(var future : futures) {
+            try {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Element " + future.get() + " created");
+            }catch (InterruptedException | ExecutionException ignore) {
+                break;
+            }
+        }
+
         return true;
     }
 
@@ -80,25 +101,38 @@ public class RawDAOsProcessor extends AbstractProcessor {
         description.setObjectName(name.toString());
         description.setPackageName(packageElement.getQualifiedName().toString());
         description.setCache(new RawDAOSpringAnnotationCollection(element));
+        List<Future<String>> futures = new ArrayList<>();
         for(var methodElement : element.getEnclosedElements()){
             if (methodElement.getKind().isField() || methodElement.getKind().isClass()) continue;
-            var method = getMethodName(methodElement);
-            switch (method) {
-                case "update":
-                case "insert":
-                    description.getMethods().add(getMethodDescription(methodElement, method));
-                    break;
-                case "query":
-                    description.getMethods().add(getQueryMethodDescription(methodElement, method));
-                    break;
-                case "save":
-                    description.getMethods().add(getSaveMethodDescription(methodElement, method));
-                    break;
-                default:
-                    description.getMethods().add(getMethodDescription(methodElement, "undefined"));
-                    break;
+            futures.add(executorService.submit(() -> {
+                var method = getMethodName(methodElement);
+                switch (method) {
+                    case "update":
+                    case "insert":
+                        description.getMethods().add(getMethodDescription(methodElement, method));
+                        break;
+                    case "query":
+                        description.getMethods().add(getQueryMethodDescription(methodElement, method));
+                        break;
+                    case "save":
+                        description.getMethods().add(getSaveMethodDescription(methodElement, method));
+                        break;
+                    default:
+                        description.getMethods().add(getMethodDescription(methodElement, "undefined"));
+                        break;
+                }
+                return method;
+            }));
+        }
+
+        for(var future : futures) {
+            try {
+                messager.printMessage(Diagnostic.Kind.NOTE, "Method " + future.get() + " created");
+            }catch (InterruptedException | ExecutionException ignore) {
+                break;
             }
         }
+
 
         JavaFileObject mapperFile = filer.createSourceFile(
                 packageElement.getQualifiedName() + "." + mapperName );
